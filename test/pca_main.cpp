@@ -6,7 +6,7 @@
 
 /*** insert any necessary libigl headers here ***/
 #include <math.h> 
-#include "PCA.h"
+#include "../src/PCA.h"
 
 using namespace std;
 using namespace Eigen;
@@ -40,6 +40,7 @@ bool callback_mouse_move(Viewer &viewer, int mouse_x, int mouse_y){
 bool callback_key_pressed(Viewer &viewer, unsigned char key, int modifiers){
 	switch (key) {
 		case '1':
+			example_function(F);
 			break;
 		case '2':
 			break;
@@ -66,7 +67,7 @@ bool callback_init(Viewer &viewer){
 
 int main(int argc,char *argv[]){
 	if(argc != 2){
-		cout << "Usage ./assignment6 <mesh.off/obj>" << endl;
+		cout << "Usage ./pca <mesh.off/obj>" << endl;
 		load_mesh("../data/aligned_faces_example/example1/fabian-brille.objaligned.obj");
 	}else{
 		load_mesh(argv[1]);
@@ -87,7 +88,7 @@ int main(int argc,char *argv[]){
 		}
 	};
 
-//   viewer.callback_key_pressed = callback_key_pressed;
+	viewer.callback_key_pressed = callback_key_pressed;
 //   viewer.callback_mouse_move = callback_mouse_move;
 //   viewer.callback_init = callback_init;
 	viewer.launch();

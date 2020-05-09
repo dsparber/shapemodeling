@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.1)
-project(assignment6)
+project(assignment6) # executable for whole pipeline
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
@@ -10,7 +10,26 @@ option(LIBIGL_WITH_OPENGL_GLFW_IMGUI "Use ImGui"    ON)
 
 find_package(LIBIGL REQUIRED QUIET)
 
-# Add your project files
-FILE(GLOB SRCFILES src/*.cpp)
-add_executable(${PROJECT_NAME} ${SRCFILES})
-target_link_libraries(${PROJECT_NAME} igl::core igl::opengl_glfw igl::opengl_glfw_imgui)
+# Add your project files except for the main function file
+FILE(GLOB SRCFILES 
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/*.h        
+)
+
+list(REMOVE_ITEM SRCFILES ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp)
+message(***************${SRCFILES}*********************)
+
+
+# Set LIBRARY_LIST variable
+SET(LIBRARY_LIST igl::core igl::opengl_glfw igl::opengl_glfw_imgui)
+
+add_executable(assignment6 ${SRCFILES} src/main.cpp)
+target_link_libraries(assignment6 ${LIBRARY_LIST})
+
+# For each step in the pipeline, add executables for testing
+
+# -----------------EXAMPLE---------------------#
+project(pca)
+add_executable(pca ${SRCFILES} test/pca_main.cpp)
+target_link_libraries(pca ${LIBRARY_LIST})
+#----------------------------------------------#
