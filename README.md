@@ -3,16 +3,17 @@
 
 ### Group Members
 
-| Legi Number | First Name | Last Name | github username |
-| ----------- | ---------- | --------- | --------------- |
-| 16-944-530  | Viviane    | Yang      | vyangETH        |
-|             |            |           |                 |
-|             |            |           |                 |
+| Legi Number | First Name | Last Name | Email            | Github Username |
+| ----------- | ---------- | --------- | ---------------- | --------------- |
+| 16-944-530  | Viviane    | Yang      | vyang@ethz.ch    | vyangETH        |
+| 17-948-191  | Daniel     | Sparber   | dsparber@ethz.ch | DanielSparber   |
+|             |            |           |                  |                 |
 
 ### Work distribution
 
+- Project lead: Daniel
 - Landmark selection: Sebastian
-- Face alignment: Jela (warping), Camilla (rigid)
+- Face alignment: Camilla (rigid), Jela (warping)
 - PCA: Viviane
 - Bonus: Daniel + whoever is finshed
 
