@@ -6,7 +6,7 @@
 
 /*** insert any necessary libigl headers here ***/
 #include <math.h> 
-#include "../src/PCA.h"
+#include "../src/pca.h"
 
 using namespace std;
 using namespace Eigen;
@@ -38,9 +38,10 @@ bool callback_mouse_move(Viewer &viewer, int mouse_x, int mouse_y){
 
 
 bool callback_key_pressed(Viewer &viewer, unsigned char key, int modifiers){
+	Eigen::MatrixXd S;
 	switch (key) {
 		case '1':
-			example_function(F);
+			load_faces("../data/aligned_faces_example/example1/", S);
 			break;
 		case '2':
 			break;

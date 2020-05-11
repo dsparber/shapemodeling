@@ -6,7 +6,6 @@
 
 /*** insert any necessary libigl headers here ***/
 #include <math.h> 
-#include "PCA.h"
 
 using namespace std;
 using namespace Eigen;
