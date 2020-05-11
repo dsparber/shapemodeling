@@ -38,10 +38,11 @@ bool callback_mouse_move(Viewer &viewer, int mouse_x, int mouse_y){
 
 
 bool callback_key_pressed(Viewer &viewer, unsigned char key, int modifiers){
-	Eigen::MatrixXd S;
+	Eigen::MatrixXd  W;
+	Eigen::VectorXd F_m;
 	switch (key) {
 		case '1':
-			load_faces("../data/aligned_faces_example/example1/", S);
+			compute_pca("../data/aligned_faces_example/example1/", F_m, W);
 			break;
 		case '2':
 			break;

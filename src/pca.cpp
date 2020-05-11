@@ -25,7 +25,7 @@ void findFilesWithExt(const string &dirPath, const string &ext, vector<string> &
 
 void load_faces(
     string dirPath,
-    Eigen::MatrixXd S)
+    Eigen::MatrixXd &S)
 {
     vector<string> listOfFiles;
     string filepath;
@@ -55,6 +55,13 @@ void load_faces(
     }
 }
 
-void compute_pca(string dirPath){
+void compute_pca(string dirPath, Eigen::VectorXd& F_m, Eigen::MatrixXd& W){
+    Eigen::MatrixXd F, F_centered, covariance;
+    load_faces(dirPath, F);
+    F_m = F.colwise().mean();
+    F_centered = F.rowwise() - F_m.transpose();
+    covariance = F_centered.adjoint() * F_centered;
+    cout << covariance.rows() << " "<< covariance.cols()<< endl;
+    //TODO covariance matrix is 6957 x 6957 -> right dimension?
 
-}
+}   

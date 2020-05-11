@@ -28,7 +28,7 @@ void compute_pca(string dirPath, Eigen::VectorXd& S_avg, Eigen::MatrixXd& S);
  **/
 void load_faces(
     string dir,
-    Eigen::MatrixXd S);
+    Eigen::MatrixXd &S);
 
 
 bool hasSuffix(const string& s, const string& suffix);
