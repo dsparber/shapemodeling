@@ -19,7 +19,8 @@ Viewer viewer;
 Eigen::MatrixXd V;
 // face array, #F x3
 Eigen::MatrixXi F;
-
+// normals
+Eigen::MatrixXd N;
 
 Eigen::MatrixXd  W;
 Eigen::VectorXd F_m;
@@ -28,9 +29,17 @@ Eigen::MatrixXd V_new;
 bool exampleBool = false;
 int exampleInt = 2;
 
-int principleComponents = 9;
+#define PRINCIPLE_COMPONENTS 9
 
-float c1, c2,c3,c4,c5,c6,c7,c8,c9;
+float c1 = 0.0;
+float c2 = 0.0;
+float c3 = 0.0;
+float c4 = 0.0;
+float c5 = 0.0;
+float c6 = 0.0;
+float c7 = 0.0;
+float c8 = 0.0;
+float c9 = 0.0;
 // ************************Function Declaration ************************ //
 bool callback_mouse_move(Viewer &viewer, int mouse_x, int mouse_y);
 bool callback_mouse_up(Viewer& viewer, int button, int modifier);
@@ -57,17 +66,41 @@ void test_eigen(){
 	cout << A.adjoint() << endl;
 	cout << A.transpose() << endl;
 }
+
+void compute_face(){
+	Eigen::VectorXd weights; weights.setZero(W.cols());
+	Eigen::VectorXd morphedFace;
+	weights(0) = c1;
+	weights(1) = c2;
+	weights(2) = c3;
+	weights(3) = c4;
+	weights(4) = c5;
+	weights(5) = c6;
+	weights(6) = c7;
+	weights(7) = c8;
+	weights(8) = c9;
+	if(weights.nonZeros() != 0)
+		weights.normalize();
+	
+	
+	morphedFace = F_m + W * weights; // dx1
+	
+	reshape(morphedFace.transpose(), morphedFace.size()/3, 3, V_new);
+	set_V(V_new);
+	
+}
 bool callback_key_pressed(Viewer &viewer, unsigned char key, int modifiers){
 	switch (key) {
 		case '1':
+			compute_face();
 			break;
 		case 'V':	
+			compute_pca("../data/aligned_faces_example/example4/", 9, F_m, W);
 			reshape(F_m, F_m.size()/3, 3, V_new);
-			cout << V_new.rows() << " "<< V_new.cols() << endl;
 			set_V(V_new);
 			break;
 		case '3':
-			cout << F_m.size() << endl;
+			cout << W.rows() << " " << W.cols() << endl;
 			break;
 		case '4':
 			test_eigen();
@@ -111,8 +144,9 @@ int main(int argc,char *argv[]){
 		load_mesh(argv[1]);
 	}
 
-	compute_pca("../data/aligned_faces_example/example4/", F_m, W);
-
+	compute_pca("../data/aligned_faces_example/example4/", PRINCIPLE_COMPONENTS, F_m, W);
+	reshape(F_m, F_m.size()/3, 3, V_new);
+	set_V(V_new);
 
 	igl::opengl::glfw::imgui::ImGuiMenu menu;
 	viewer.plugins.push_back(&menu);
@@ -126,15 +160,15 @@ int main(int argc,char *argv[]){
 		{
 			ImGui::Checkbox("Example Boolean", &exampleBool);
 			ImGui::InputInt("Example Integer", &exampleInt);
-			ImGui::SliderFloat("c1", &c1, 0, 1);
-			ImGui::SliderFloat("c2", &c2, 0, 1);
-			ImGui::SliderFloat("c3", &c3, 0, 1);
-			ImGui::SliderFloat("c4", &c4, 0, 1);
-			ImGui::SliderFloat("c5", &c5, 0, 1);
-			ImGui::SliderFloat("c6", &c6, 0, 1);
-			ImGui::SliderFloat("c7", &c7, 0, 1);
-			ImGui::SliderFloat("c8", &c8, 0, 1);
-			ImGui::SliderFloat("c9", &c9, 0, 1);
+			ImGui::SliderFloat("c1", &c1, -1, 1);
+			ImGui::SliderFloat("c2", &c2, -1, 1);
+			ImGui::SliderFloat("c3", &c3, -1, 1);
+			ImGui::SliderFloat("c4", &c4, -1, 1);
+			ImGui::SliderFloat("c5", &c5, -1, 1);
+			ImGui::SliderFloat("c6", &c6, -1, 1);
+			ImGui::SliderFloat("c7", &c7, -1, 1);
+			ImGui::SliderFloat("c8", &c8, -1, 1);
+			ImGui::SliderFloat("c9", &c9, -1, 1);
 		}
 	};
 
