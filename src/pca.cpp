@@ -1,5 +1,5 @@
 #include "pca.h"
-
+#include <Eigen/Eigenvalues> 
 using namespace std;
 
 bool hasSuffix(const string& s, const string& suffix)
@@ -48,6 +48,7 @@ void load_faces(
     S.setZero(nbFaces, 3*nbPoints);
     for(int i = 0; i < nbFaces; i++){
         filepath = dirPath + "/" + listOfFiles[i];
+        cout << listOfFiles[i]<<endl;
         igl::read_triangle_mesh(filepath, V, F);
         V.transposeInPlace();
         S.row(i) = Eigen::Map<Eigen::RowVectorXd>(V.data(), V.size());
@@ -55,13 +56,31 @@ void load_faces(
     }
 }
 
-void compute_pca(string dirPath, Eigen::VectorXd& F_m, Eigen::MatrixXd& W){
-    Eigen::MatrixXd F, F_centered, covariance;
-    load_faces(dirPath, F);
-    F_m = F.colwise().mean();
-    F_centered = F.rowwise() - F_m.transpose();
-    covariance = F_centered.adjoint() * F_centered;
-    cout << covariance.rows() << " "<< covariance.cols()<< endl;
-    //TODO covariance matrix is 6957 x 6957 -> right dimension?
+void compute_pca(string dirPath, Eigen::VectorXd& mX, Eigen::MatrixXd& E){
+    // Eigen::MatrixXd F, F_centered, covariance, eigenvectors;
+    // load_faces(dirPath, F);
+    // F_m = F.colwise().mean(); 
+    // F_centered = F.rowwise() - F_m.transpose();
+    // covariance = F_centered * F_centered.adjoint();
+    
+    // eigenvectors = eigen.eigenvectors();
+    // cout << eigenvectors << endl;
+    int n, d;
+    Eigen::MatrixXd X, X_centered, L; // nxd
 
+    load_faces(dirPath, X);
+    n = X.rows();
+    d = X.cols();
+    mX = X.colwise().mean();
+
+    X_centered = X.rowwise() - mX.transpose();
+    // Want eigenvectors u of X^T*X in dxd --> to big
+    // Instead compute eigenvectors v of X*X^T, with u = X^T*v
+    L = X_centered * X_centered.adjoint();
+    Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> eigen(L);
+    auto v = eigen.eigenvectors();
+    auto u = X.adjoint() * v;
+    // cout << u.rows() <<" "<< u.cols() << endl;
+    E = u;
+    E.transposeInPlace();
 }   
