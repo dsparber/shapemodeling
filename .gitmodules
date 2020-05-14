@@ -1,9 +1,0 @@
-[submodule "libigl"]
-	path = libigl
-	url = https://github.com/eth-igl/libigl
-[submodule "pytorch_coma"]
-	path = pytorch_coma
-	url = git@github.com:pixelite1201/pytorch_coma.git
-[submodule "mesh"]
-	path = mesh
-	url = git@github.com:MPI-IS/mesh.git
