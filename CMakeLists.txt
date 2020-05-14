@@ -32,4 +32,8 @@ target_link_libraries(assignment6 ${LIBRARY_LIST})
 project(pca)
 add_executable(pca ${SRCFILES} test/pca_main.cpp)
 target_link_libraries(pca ${LIBRARY_LIST})
+
+project(landmark)
+add_executable(landmark ${SRCFILES} test/landmark_main.cpp)
+target_link_libraries(landmark ${LIBRARY_LIST})
 #----------------------------------------------#
