@@ -9,7 +9,7 @@
 #include <memory>
 #include <math.h> 
 
-#include "PCA.h"
+#include "pca.h"
 #include "landmark.h"
 
 using namespace std;
