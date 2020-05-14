@@ -54,8 +54,9 @@ void compute_pca(string dirPath, int m, Eigen::VectorXd& mX, Eigen::MatrixXd& E)
 {
     int n, d;
     Eigen::MatrixXd X, X_centered, L; // nxd
-
     load_faces(dirPath, X);
+
+    cout << "m: "<< m << endl;
     n = X.rows();
     d = X.cols();
     mX = X.colwise().mean();
@@ -75,5 +76,6 @@ void compute_pca(string dirPath, int m, Eigen::VectorXd& mX, Eigen::MatrixXd& E)
     Eigen::MatrixXd u = X.adjoint() * v; 
     // return m last eigenvectors, since they are sorted by increasing eigenvalues
     E = u.block(0, n - m, d, m); //dxm matrix of eigenvectors (in cols)
-
+    //TODO: Also save eigenvalues?
+    cout << "Finish compute_pca " << endl;
 }   

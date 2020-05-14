@@ -6,10 +6,11 @@
 
 /*** insert any necessary libigl headers here ***/
 #include <math.h> 
-#include <unistd.h>
 #include "../src/pca.h"
+#include "../src/rigid_registration.h"
 
 using namespace std;
+using namespace Eigen;
 
 using Viewer = igl::opengl::glfw::Viewer;
 
@@ -21,20 +22,25 @@ Eigen::MatrixXd V;
 Eigen::MatrixXi F;
 // normals
 Eigen::MatrixXd N;
-// eigenvectors
+
 Eigen::MatrixXd  W;
-// mean face
 Eigen::VectorXd F_m;
-// place holder
 Eigen::MatrixXd V_new;
 
 bool exampleBool = false;
 int exampleInt = 2;
 
-int PRINCIPLE_COMPONENTS = 9;
-string dirPath = "../data/aligned_faces_example/example4/";
-string templatePath = "/home/viviane/FS2020/shape/sm-assignment6/data/face_template/headtemplate_noneck_lesshead_4k.obj";
-vector<float> slider_weights;
+#define PRINCIPLE_COMPONENTS 9
+
+float c1 = 0.0;
+float c2 = 0.0;
+float c3 = 0.0;
+float c4 = 0.0;
+float c5 = 0.0;
+float c6 = 0.0;
+float c7 = 0.0;
+float c8 = 0.0;
+float c9 = 0.0;
 // ************************Function Declaration ************************ //
 bool callback_mouse_move(Viewer &viewer, int mouse_x, int mouse_y);
 bool callback_mouse_up(Viewer& viewer, int button, int modifier);
@@ -54,16 +60,32 @@ void reshape(Eigen::VectorXd flat, int rows, int cols, Eigen::MatrixXd &matrix){
 	matrix = Eigen::MatrixXd(M.transpose());
 }
 
+void test_eigen(){
+	Eigen::MatrixXd A(4, 3);
+	A << -1, 2, -3, 4, 5, 6, -7, 8, -9, 10, 11, 12;
+	cout << A << endl;
+	cout << A.adjoint() << endl;
+	cout << A.transpose() << endl;
+}
+
 void compute_face(){
 	Eigen::VectorXd weights; weights.setZero(W.cols());
 	Eigen::VectorXd morphedFace;
-	for(int i = 0; i < PRINCIPLE_COMPONENTS; i++){
-		weights(i) = slider_weights[i];
-	}
+	weights(0) = c1;
+	weights(1) = c2;
+	weights(2) = c3;
+	weights(3) = c4;
+	weights(4) = c5;
+	weights(5) = c6;
+	weights(6) = c7;
+	weights(7) = c8;
+	weights(8) = c9;
 	if(weights.nonZeros() != 0)
 		weights.normalize();
 	
+	
 	morphedFace = F_m + W * weights; // dx1
+	
 	reshape(morphedFace.transpose(), morphedFace.size()/3, 3, V_new);
 	set_V(V_new);
 	
@@ -73,23 +95,19 @@ bool callback_key_pressed(Viewer &viewer, unsigned char key, int modifiers){
 		case '1':
 			compute_face();
 			break;
-		case '2' :
-			break;
-		case '3':
-			cout << W.rows() << " " << W.cols() << endl;
-			break;
-		case '4':
-			break;
+        case '2':
+            re
 		case 'V':	
 			compute_pca("../data/aligned_faces_example/example4/", 9, F_m, W);
 			reshape(F_m, F_m.size()/3, 3, V_new);
 			set_V(V_new);
 			break;
-		case 'R':
-			for(auto &e : slider_weights){
-				e = 0.0f;
-			}
-			break;	
+		case '3':
+			cout << W.rows() << " " << W.cols() << endl;
+			break;
+		case '4':
+			test_eigen();
+			break;
 	}
 
 }
@@ -117,29 +135,19 @@ bool callback_init(Viewer &viewer){
 
 bool callback_mouse_up(Viewer& viewer, int button, int modifier)
 {
+	
 	return true;
 };
 
 int main(int argc,char *argv[]){
 	if(argc != 2){
-		cout << "Usage ./pca path/to/aligned_faces/" << endl;
+		cout << "Usage ./pca <mesh.off/obj>" << endl;
+		load_mesh("../data/aligned_faces_example/example1/fabian-brille.objaligned.obj");
 	}else{
-		dirPath = argv[1];
+		load_mesh(argv[1]);
 	}
 
-	int opt;
-	while((opt = getopt(argc, argv, "m:")) != -1){
-		switch(opt){
-			case 'm':
-				PRINCIPLE_COMPONENTS = atoi(optarg);
-				break;
-		}
-	}
-	// set weights to zero
-	slider_weights = vector<float>(PRINCIPLE_COMPONENTS, 0);
-	//set F from a template file
-	igl::read_triangle_mesh(templatePath, V, F);
-	compute_pca(dirPath, PRINCIPLE_COMPONENTS, F_m, W);
+	compute_pca("../data/aligned_faces_example/example4/", PRINCIPLE_COMPONENTS, F_m, W);
 	reshape(F_m, F_m.size()/3, 3, V_new);
 	set_V(V_new);
 
@@ -155,10 +163,15 @@ int main(int argc,char *argv[]){
 		{
 			ImGui::Checkbox("Example Boolean", &exampleBool);
 			ImGui::InputInt("Example Integer", &exampleInt);
-			for(int i = 0; i < PRINCIPLE_COMPONENTS; i++){
-				string weight_name = "Eigenvector " + to_string(i);
-				ImGui::SliderFloat(weight_name.c_str(), &(slider_weights[i]), -1, 1);
-			}
+			ImGui::SliderFloat("c1", &c1, -1, 1);
+			ImGui::SliderFloat("c2", &c2, -1, 1);
+			ImGui::SliderFloat("c3", &c3, -1, 1);
+			ImGui::SliderFloat("c4", &c4, -1, 1);
+			ImGui::SliderFloat("c5", &c5, -1, 1);
+			ImGui::SliderFloat("c6", &c6, -1, 1);
+			ImGui::SliderFloat("c7", &c7, -1, 1);
+			ImGui::SliderFloat("c8", &c8, -1, 1);
+			ImGui::SliderFloat("c9", &c9, -1, 1);
 		}
 	};
 
