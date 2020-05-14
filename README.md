@@ -7,7 +7,7 @@
 | ----------- | ---------- | --------- | ---------------- | --------------- |
 | 16-944-530  | Viviane    | Yang      | vyang@ethz.ch    | vyangETH        |
 | 17-948-191  | Daniel     | Sparber   | dsparber@ethz.ch | DanielSparber   |
-|             |            |           |                  |                 |
+| 15-941-222  | Sebastian  | Winberg   | winbergs@ethz.ch | winbergs        |
 
 ### Work distribution
 
