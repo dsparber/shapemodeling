@@ -1,6 +1,9 @@
 #ifndef WARPING_H
 #define WARPING_H
 
+#include <memory>
+#include <string>
+
 class Warping {
 
 public:
