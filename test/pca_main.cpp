@@ -37,20 +37,15 @@ int PRINCIPLE_COMPONENTS = 9;
 string dirPath = "../data/aligned_faces_example/example4/";
 string templatePath = "/home/viviane/FS2020/shape/sm-assignment6/data/face_template/headtemplate_noneck_lesshead_4k.obj";
 vector<float> slider_weights;
+
 // ************************Function Declaration ************************ //
-bool callback_mouse_move(Viewer &viewer, int mouse_x, int mouse_y);
-bool callback_mouse_up(Viewer& viewer, int button, int modifier);
 bool callback_key_pressed(Viewer &viewer, unsigned char key, int modifiers);
 bool load_mesh(string filename);
-bool callback_init(Viewer &viewer);
 bool set_V(Eigen::MatrixXd &Vnew);
+void reshape(Eigen::VectorXd flat, int rows, int cols, Eigen::MatrixXd &matrix);
+void compute_face();
 // ******************************************************************** //
 
-
-bool callback_mouse_move(Viewer &viewer, int mouse_x, int mouse_y){
-	viewer.mouse_mode = igl::opengl::glfw::Viewer::MouseMode::Translation;
-	return true;
-}
 
 void reshape(Eigen::VectorXd flat, int rows, int cols, Eigen::MatrixXd &matrix){
 	Eigen::Map<Eigen::MatrixXd> M(flat.data(), cols, rows);
@@ -71,6 +66,7 @@ void compute_face(){
 	set_V(V_new);
 	
 }
+
 bool callback_key_pressed(Viewer &viewer, unsigned char key, int modifiers){
 	switch (key) {
 		case '1':
@@ -79,16 +75,17 @@ bool callback_key_pressed(Viewer &viewer, unsigned char key, int modifiers){
 		case '2' :
 			break;
 		case '3':
-			cout << W.rows() << " " << W.cols() << endl;
 			break;
 		case '4':
 			break;
 		case 'V':	
+		// recompute PCA and set mean face
 			compute_pca("../data/aligned_faces_example/example4/", 9, F_m, W);
 			reshape(F_m, F_m.size()/3, 3, V_new);
 			set_V(V_new);
 			break;
 		case 'R':
+		// Reset weights
 			for(auto &e : slider_weights){
 				e = 0.0f;
 			}
@@ -115,14 +112,6 @@ bool set_V(Eigen::MatrixXd &Vnew){
 	return true;
 }
 
-bool callback_init(Viewer &viewer){
-	return false;
-}
-
-bool callback_mouse_up(Viewer& viewer, int button, int modifier)
-{
-	return true;
-};
 
 int main(int argc,char *argv[]){
 	if(argc != 2){
@@ -169,7 +158,5 @@ int main(int argc,char *argv[]){
 	};
 
 	viewer.callback_key_pressed = callback_key_pressed;
-//   viewer.callback_mouse_move = callback_mouse_move;
-//   viewer.callback_init = callback_init;
 	viewer.launch();
 }
