@@ -36,4 +36,8 @@ target_link_libraries(pca ${LIBRARY_LIST})
 project(landmark)
 add_executable(landmark ${SRCFILES} test/landmark_main.cpp)
 target_link_libraries(landmark ${LIBRARY_LIST})
+
+project(warping)
+add_executable(warping ${SRCFILES} test/warping_main.cpp)
+target_link_libraries(warping ${LIBRARY_LIST})
 #----------------------------------------------#
