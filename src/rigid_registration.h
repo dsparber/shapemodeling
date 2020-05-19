@@ -40,7 +40,9 @@ void rigid_registration(const std::string &landmarks_template,
     igl::read_triangle_mesh(path_scan, V_scan, F_scan);
 
     // Read txt files.
-    auto [land_templ, land_scan] = register_landmarks(landmarks_template, landmarks_scan);
+    std::pair<Eigen::VectorXi, Eigen::VectorXi> land = register_landmarks(landmarks_template, landmarks_scan);
+    Eigen::VectorXi land_templ = land.first;
+    Eigen::VectorXi land_scan = land.second;
 
     // Compute registration.
     rigid_registration_core(V_template, V_scan, land_templ, land_scan, W_template, W_scan);

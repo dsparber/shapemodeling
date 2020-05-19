@@ -3,7 +3,11 @@
 
 #include <iostream>
 #include <string>
+
+#ifndef _WIN32
 #include <dirent.h>
+#endif
+
 #include <vector>
 
 #include <Eigen/Core>

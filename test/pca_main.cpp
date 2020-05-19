@@ -6,7 +6,9 @@
 
 /*** insert any necessary libigl headers here ***/
 #include <math.h> 
+#ifndef _WIN32
 #include <unistd.h>
+#endif
 #include "../src/pca.h"
 
 using namespace std;
@@ -47,6 +49,7 @@ bool set_V(Eigen::MatrixXd &Vnew);
 
 bool callback_mouse_move(Viewer &viewer, int mouse_x, int mouse_y){
 	viewer.mouse_mode = igl::opengl::glfw::Viewer::MouseMode::Translation;
+	return true;
 }
 
 void reshape(Eigen::VectorXd flat, int rows, int cols, Eigen::MatrixXd &matrix){
@@ -92,6 +95,7 @@ bool callback_key_pressed(Viewer &viewer, unsigned char key, int modifiers){
 			break;	
 	}
 
+	return true;
 }
 
 bool load_mesh(string filename){
@@ -127,6 +131,7 @@ int main(int argc,char *argv[]){
 		dirPath = argv[1];
 	}
 
+#ifndef _WIN32
 	int opt;
 	while((opt = getopt(argc, argv, "m:")) != -1){
 		switch(opt){
@@ -135,6 +140,7 @@ int main(int argc,char *argv[]){
 				break;
 		}
 	}
+#endif
 	// set weights to zero
 	slider_weights = vector<float>(PRINCIPLE_COMPONENTS, 0);
 	//set F from a template file
