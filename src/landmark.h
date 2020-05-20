@@ -26,32 +26,31 @@ public:
     // Const reference to glfw viewer object
     const Viewer &viewer;
 
-    // TODO: (Sebastian) Points 14 <-> 15 inconsistent in pictures on page 7 of slides
+    // For template have a look at: https://polybox.ethz.ch/index.php/s/ZfYXXfV5SR4sQoB
     // Map of all valid landmarks and descriptions (keys set here will be the valid landmark ids)
     std::map<int, std::string> descriptions = {
-        {1, "outer end of the left brow"},
-        {2, "upper-middle end of the left brow"},
-        {3, "inner end of the left brow"},
-        {4, "inner end of the right brow"},
-        {5, "upper-middle end of the right brow"},
-        {6, "outer end of the right brow"},
-        {7, "outer end of the left eyelid"},
-        {8, "middle end of the left eyelid"},
-        {9, "inner end of the left eyelid"},
-        {10, "inner end of the right eyelid"},
-        {11, "middle end of the right eyelid"},
-        {12, "outer end of the right eyelid"},
-        {13, "outer end of the left cheek"},          // TODO: (Sebastian) find good description for this
-        {14, "outer left end of the nose"},
-        {15, "tip end of the nose"},
-        {16, "outer right end of the nose"},
-        {17, "outer end of the right cheek"},
-        {18, "outer left of the mouth"},
-        {19, "upper-middle end of the mouth"},
-        {20, "outer right of the mouth"},
-        {21, "tip of the chin"},
-        {22, "TODO: 22 description"},
-        {23, "TODO: 23 description"}
+        {0, "outer end of left brow"},
+        {1, "upper middle end of left brow"},
+        {2, "inner end of left brow"},
+        {3, "inner end of right brow"},
+        {4, "upper middle end of right brow"},
+        {5, "outer end of right brow"},
+        {6, "outer end of left eyelid"},
+        {7, "upper middle end of left eyelid"},
+        {8, "inner end of left eyelid"},
+        {9, "lower middle end of left eyelid"},
+        {10, "inner end of right eyelid"},
+        {11, "upper middle end of right eyelid"},
+        {12, "outer end of right eyelid"},
+        {13, "lower middle end of right eyelid"},
+        {14, "outer left end of nose"},
+        {15, "tip end of nose"},
+        {16, "outer right end of nose"},
+        {17, "lower middle end of nose"},
+        {18, "outer left of mouth"},
+        {19, "upper middle end of mouth"},
+        {20, "outer right of mouth"},
+        {21, "tip of chin"}
     };
 
     // Map of containing landmark ids to vertex ids
