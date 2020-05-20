@@ -24,6 +24,7 @@ void rigid_registration_core(const Eigen::MatrixXd &V_template,
  * @param W_scan : (output) vertices of scan.
  * @param F_template : (output) faces od template.
  * @param F_scan : (output) faces of scan.
+ * @param landmarks : (output) landmarks of template and scan.
  */
 void rigid_registration(const std::string &landmarks_template,
                         const std::string &landmarks_scan,
@@ -32,7 +33,9 @@ void rigid_registration(const std::string &landmarks_template,
                         Eigen::MatrixXd &W_template,
                         Eigen::MatrixXd &W_scan,
                         Eigen::MatrixXi &F_template,
-                        Eigen::MatrixXi &F_scan)
+                        Eigen::MatrixXi &F_scan,
+                        std::pair<Eigen::VectorXi, Eigen::VectorXi> &landmarks
+    )
 {
     // Read the obj files.
     Eigen::MatrixXd V_template, V_scan;
@@ -40,12 +43,10 @@ void rigid_registration(const std::string &landmarks_template,
     igl::read_triangle_mesh(path_scan, V_scan, F_scan);
 
     // Read txt files.
-    std::pair<Eigen::VectorXi, Eigen::VectorXi> land = register_landmarks(landmarks_template, landmarks_scan);
-    Eigen::VectorXi land_templ = land.first;
-    Eigen::VectorXi land_scan = land.second;
+    landmarks = register_landmarks(landmarks_template, landmarks_scan);
 
     // Compute registration.
-    rigid_registration_core(V_template, V_scan, land_templ, land_scan, W_template, W_scan);
+    rigid_registration_core(V_template, V_scan, landmarks.first, landmarks.second, W_template, W_scan);
 }
 
 /**

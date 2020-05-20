@@ -11,6 +11,7 @@
 
 #include "pca.h"
 #include "landmark.h"
+#include "face_alignment.h"
 
 using namespace std;
 using namespace Eigen;
@@ -26,6 +27,9 @@ Eigen::MatrixXi F;
 
 // Unique pointer to landmark manager
 std::unique_ptr<LandmarkManager> landmarkManager;
+
+// Unique pointer to face alignment manager
+std::unique_ptr<FaceAlignmentManager> faceAlignmentManager;
 
 // Pipeline mode for showing different window
 enum PipelineMode {
@@ -87,6 +91,10 @@ bool callback_key_pressed(Viewer &viewer, unsigned char key, int modifier) {
 		// Passing on key pressed event to landmark manager
 		landmarkManager->callback_key_pressed(viewer, key, modifier);
 	}
+	else if (pipelineMode == FACE_ALIGNMENT_MODE) {
+		// Passing on key pressed event to face alignment manager
+		faceAlignmentManager->callback_key_pressed(viewer, key, modifier);
+	}
 
 	return false;
 
@@ -144,6 +152,9 @@ int main(int argc,char *argv[]) {
 		load_mesh(argv[1]);
 	}
 
+	// Initialize face alignment manager
+	faceAlignmentManager = std::unique_ptr<FaceAlignmentManager>(new FaceAlignmentManager(viewer));
+
 	igl::opengl::glfw::imgui::ImGuiMenu menu;
 	viewer.plugins.push_back(&menu);
 
@@ -172,6 +183,9 @@ int main(int argc,char *argv[]) {
 		if (pipelineMode == LANDMARK_MODE) {
 			// Drawing custom landmark window menu
 			landmarkManager->callback_draw_viewer_menu();
+		}
+		else if (pipelineMode == FACE_ALIGNMENT_MODE) {
+			faceAlignmentManager->callback_draw_viewer_menu();
 		}
 
 	};
