@@ -12,7 +12,8 @@ if __name__ == "__main__":
     dataset = FaceDataset(data_path)
     data_loader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=False)
     
-    model = Autoencoder()
+    num_points = dataset.num_points()
+    model = Autoencoder(num_points)
     model.load_state_dict(torch.load('model.pt'))
     
     with torch.set_grad_enabled(False):

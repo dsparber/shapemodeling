@@ -4,7 +4,7 @@ from model.autoencoder import Autoencoder
 from torch.nn import MSELoss
 from torch.nn.functional import pad
 
-model = Autoencoder()
+model = Autoencoder(2319)
 model.load_state_dict(torch.load('model.pt'))
 
 def decode(z, padding):

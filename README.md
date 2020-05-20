@@ -3,12 +3,13 @@
 
 ### Group Members
 
-| Legi Number | First Name | Last Name | Email            | Github Username |
-| ----------- | ---------- | --------- | ---------------- | --------------- |
-| 16-944-530  | Viviane    | Yang      | vyang@ethz.ch    | vyangETH        |
-| 17-948-191  | Daniel     | Sparber   | dsparber@ethz.ch | DanielSparber   |
-| 15-941-222  | Sebastian  | Winberg   | winbergs@ethz.ch | winbergs        |
-| 15-923-428  | Jela       | Kovacevic | jelak@ethz.ch    | jelak           |
+| Legi Number | First Name | Last Name       | Email            | Github Username |
+| ----------- | ---------- | ----------------| ---------------- | --------------- |
+| 16-944-530  | Viviane    | Yang            | vyang@ethz.ch    | vyangETH        |
+| 17-948-191  | Daniel     | Sparber         | dsparber@ethz.ch | DanielSparber   |
+| 15-941-222  | Sebastian  | Winberg         | winbergs@ethz.ch | winbergs        |
+| 18-949-685  | Camilla    | Casamento Tumeo | camillca@ethz.ch | ccasam          |
+| 15-923-428  | Jela       | Kovacevic       | jelak@ethz.ch    | jelak           |
 
 ### Work distribution
 
