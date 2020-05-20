@@ -29,6 +29,9 @@ class FaceDataset(Dataset):
     def get_mean(self):
         return self.mean_tensor
 
+    def num_points(self):
+        return self.tensors[0].size(1)
+
     @staticmethod
     def _line_to_point(line):
         values = line.split(' ')[1:]
