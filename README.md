@@ -8,6 +8,7 @@
 | 16-944-530  | Viviane    | Yang      | vyang@ethz.ch    | vyangETH        |
 | 17-948-191  | Daniel     | Sparber   | dsparber@ethz.ch | DanielSparber   |
 | 15-941-222  | Sebastian  | Winberg   | winbergs@ethz.ch | winbergs        |
+| 15-923-428  | Jela       | Kovacevic | jelak@ethz.ch    | jelak           |
 
 ### Work distribution
 
@@ -27,7 +28,8 @@
 ### Meetings
 
 - 09.05.2020, 14:00
-- TBA
+- 20.05.2020, 11:20
+- 26.05.2020, 10:00
 
 ### Project Structure
 
@@ -68,3 +70,11 @@ make -j2
 2. Write your own test file in `test`
 3. Add an executable for your step in CMakeLists.txt
 4. After testing, add your files and functions in the pipeline main.cpp
+
+### Important Links
+
+#### Polybox shared with all teams
+[Polybox](https://polybox.ethz.ch/index.php/s/ZfYXXfV5SR4sQoB), PW: eigenfaces
+
+#### Presentation
+[Google docs presentation](https://docs.google.com/presentation/d/1DIcviOEhOQk6m5dT0ryPQ2L86IimTuuQazykyQr2f8I/edit?usp=sharing)
