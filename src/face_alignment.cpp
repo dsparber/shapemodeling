@@ -18,14 +18,14 @@ void FaceAlignmentManager::callback_draw_viewer_menu() {
     ImGui::Begin("Face Alignment", nullptr);
 
     if (ImGui::CollapsingHeader("Rigid Registration", ImGuiTreeNodeFlags_DefaultOpen)) {
-        ImGui::Text("Paths for registration,\nthe order is:\n- template\n- scan\n- template landmarks\n- scan landmarks");
+        ImGui::Text("Paths for registration,\nthe order is:\n- template\n- template landmarks\n- scan\n- scan landmarks");
 
         if (ImGui::Button("Browse")) {
             path_template = igl::file_dialog_open();
 
-            path_scan = igl::file_dialog_open();
-
             path_landmarks_template = igl::file_dialog_open();
+
+            path_scan = igl::file_dialog_open();
 
             path_landmarks_scan = igl::file_dialog_open();
 
