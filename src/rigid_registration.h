@@ -40,5 +40,20 @@ void rigid_registration(const std::string &landmarks_template,
                         Eigen::MatrixXi &F_template,
                         Eigen::MatrixXi &F_scan,
                         std::pair<Eigen::VectorXi, Eigen::VectorXi> &landmarks);
+/**
+ * @brief Produces all warped obj files.
+ * 
+ * @param folder_scans : path to folder with all scans we want to do warp template on.
+ * @param template_obj : path to template.obj file.
+ * @param template_txt : path to template.txt file.
+ * @param output_path : path to directory where we want to store warped files.
+ * @param lambda : regularization parameter for warping.
+ * @param iterations : number of warping iterations.
+ * @param relative_distance_threshold : distance threshold for warping.
+ */
+void warp_meshes_to_folder(const std::string &folder_scans, const std::string &template_obj,
+                           const std::string template_txt, const std::string output_path,
+                           const double lambda, const int &iterations,
+                           const double relative_distance_threshold);
 
 #endif

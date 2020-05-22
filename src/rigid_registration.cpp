@@ -1,6 +1,9 @@
 #include "rigid_registration.h"
 #include <igl/read_triangle_mesh.h>
 #include <igl/slice.h>
+#include <igl/writeOBJ.h>
+#include "pca.h"
+#include "warping.h"
 
 void rigid_registration(const std::string &landmarks_template,
                         const std::string &landmarks_scan,
@@ -81,7 +84,8 @@ void rigid_registration_core(const Eigen::MatrixXd &V_template,
 
     // Center in (0,0,0) both template and scan and store into W1, W2.
     W_template = V_template.rowwise() - mean_template.transpose();
-    W_scan = V_scan.rowwise() - mean_scan.transpose();
+    //W_scan = V_scan.rowwise() - mean_scan.transpose();
+    W_scan = V_scan;
 
     // Rescale the template to the scan.
     double dist_scan, dist_template;
@@ -124,4 +128,39 @@ void rigid_registration_core(const Eigen::MatrixXd &V_template,
 
     // Rotate the template.
     W_template = (R * W_template.transpose()).transpose();
+}
+
+void warp_meshes_to_folder(const std::string &folder_scans, const std::string &template_obj,
+                           const std::string template_txt, const std::string output_path,
+                           const double lambda, const int &iterations, const double relative_distance_threshold)
+{
+    vector<string> obj_files;
+    findFilesWithExt(folder_scans, ".obj", obj_files);
+    int n_files = obj_files.size();
+
+    for (int i = 0; i < n_files; ++i)
+    {
+        cout << "Processing file " << i + 1 << " out of " << n_files << endl;
+
+        size_t lastindex = obj_files[i].find_last_of(".");
+        std::string rawname = obj_files[i].substr(0, lastindex);
+
+        std::string scan_obj = obj_files[i];
+        std::string scan_txt = rawname + ".txt";
+
+        Eigen::MatrixXd W_template, W_scan, V_warped;
+        Eigen::MatrixXi F_template, F_scan, F_warped;
+        std::pair<Eigen::VectorXi, Eigen::VectorXi> landmarks;
+
+        // First perform rigid alignment.
+        rigid_registration(template_txt, folder_scans + "/" + scan_txt, template_obj, folder_scans + "/" + scan_obj,
+                           W_template, W_scan, F_template, F_scan, landmarks);
+
+        // Then warp the template to scan.
+        std::shared_ptr<Warping> warp;
+        warp = std::shared_ptr<Warping>(new Warping(W_template, W_scan, F_template, F_scan, landmarks));
+        warp->warp(lambda, iterations, relative_distance_threshold, V_warped, F_warped);
+        igl::writeOBJ(output_path + "/" + rawname + "_warped" + ".obj", V_warped, F_warped);
+    }
+    cout << "Finished to write warped meshes to file." << endl;
 }
