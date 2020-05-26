@@ -9,7 +9,6 @@ bool hasSuffix(const string& s, const string& suffix)
 
 void findFilesWithExt(const string &dirPath, const string &ext, vector<string> &listOfFiles)
 {
-#ifndef _WIN32
     DIR *dir = opendir(dirPath.c_str());
     if(!dir){
         cout << "Not a directory: "<< dirPath << endl;
@@ -22,7 +21,6 @@ void findFilesWithExt(const string &dirPath, const string &ext, vector<string> &
         }
     }
     closedir(dir);
-#endif
 }
 
 void load_faces(string dirPath, Eigen::MatrixXd &S)

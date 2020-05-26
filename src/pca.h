@@ -4,15 +4,17 @@
 #include <iostream>
 #include <string>
 
-#ifndef _WIN32
-#include <dirent.h>
-#endif
-
 #include <vector>
 
 #include <Eigen/Core>
 #include <igl/adjacency_list.h>
 #include <igl/read_triangle_mesh.h>
+
+#ifdef _WIN32
+#include "dirent.h"
+#else
+#include <dirent.h>
+#endif
 
 using namespace std;
 using namespace std;
