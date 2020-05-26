@@ -35,7 +35,7 @@ int exampleInt = 2;
 
 int PRINCIPLE_COMPONENTS = 9;
 string dirPath = "../data/aligned_faces_example/example4/";
-string templatePath = "/home/viviane/FS2020/shape/sm-assignment6/data/face_template/headtemplate_noneck_lesshead_4k.obj";
+string templatePath = "../group2_warped/alain_normal_warped.obj";
 vector<float> slider_weights;
 
 // ************************Function Declaration ************************ //
@@ -119,7 +119,9 @@ int main(int argc,char *argv[]){
 	}else{
 		dirPath = argv[1];
 	}
-
+	if(argc == 3){
+		templatePath = argv[2];
+	}
 #ifndef _WIN32
 	int opt;
 	while((opt = getopt(argc, argv, "m:")) != -1){
