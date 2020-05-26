@@ -44,4 +44,8 @@ target_link_libraries(warping ${LIBRARY_LIST})
 project(generate)
 add_executable(generate ${SRCFILES} test/generate_faces.cpp)
 target_link_libraries(generate ${LIBRARY_LIST})
+
+project(warp_meshes)
+add_executable(warp_meshes ${SRCFILES} test/generate_warped_meshes.cpp)
+target_link_libraries(warp_meshes ${LIBRARY_LIST})
 #----------------------------------------------#

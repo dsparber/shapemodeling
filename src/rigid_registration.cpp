@@ -84,7 +84,7 @@ void rigid_registration_core(const Eigen::MatrixXd &V_template,
 
     // Center in (0,0,0) both template and scan and store into W1, W2.
     W_template = V_template.rowwise() - mean_template.transpose();
-    //W_scan = V_scan.rowwise() - mean_scan.transpose();
+    W_scan = V_scan.rowwise() - mean_scan.transpose();
     W_scan = V_scan;
 
     // Rescale the template to the scan.
@@ -112,7 +112,10 @@ void rigid_registration_core(const Eigen::MatrixXd &V_template,
 
     // Compute the best rotation and rotate the template.
     Eigen::MatrixXd X, U, U_tilde, R;
-    X = M_template.transpose() * M_scan;
+
+    //X = M_template.transpose() * M_scan;
+    X = M_scan.transpose() * M_template;
+
     Eigen::JacobiSVD<Eigen::MatrixXd> svd(X, Eigen::ComputeFullV | Eigen::ComputeFullU);
     U = svd.matrixU();
     U_tilde = svd.matrixV();
@@ -127,7 +130,9 @@ void rigid_registration_core(const Eigen::MatrixXd &V_template,
     }
 
     // Rotate the template.
-    W_template = (R * W_template.transpose()).transpose();
+    //W_template = (R * W_template.transpose()).transpose();
+    // Rotate the scan.
+    W_scan = (R * W_scan.transpose()).transpose();
 }
 
 void warp_meshes_to_folder(const std::string &folder_scans, const std::string &template_obj,
@@ -160,6 +165,13 @@ void warp_meshes_to_folder(const std::string &folder_scans, const std::string &t
         std::shared_ptr<Warping> warp;
         warp = std::shared_ptr<Warping>(new Warping(W_template, W_scan, F_template, F_scan, landmarks));
         warp->warp(lambda, iterations, relative_distance_threshold, V_warped, F_warped);
+
+        // Finally translate vertices such that their mean is in 0.
+        Eigen::VectorXd mean;
+        mean = V_warped.colwise().mean();
+        V_warped = V_warped.rowwise() - mean.transpose();
+
+        // Write to disk.
         igl::writeOBJ(output_path + "/" + rawname + "_warped" + ".obj", V_warped, F_warped);
     }
     cout << "Finished to write warped meshes to file." << endl;
