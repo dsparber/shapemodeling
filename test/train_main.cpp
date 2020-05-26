@@ -15,7 +15,7 @@
 
 using namespace std;
 
-std::string pythonCommand = "cd ../learning && bash -i -c 'conda init bash; activate base; python decode.py'";
+std::string pythonCommand = "cd ../learning && python decode.py";
 
 using Viewer = igl::opengl::glfw::Viewer;
 
@@ -37,9 +37,7 @@ Eigen::MatrixXd V_new;
 bool exampleBool = false;
 int exampleInt = 2;
 
-int PRINCIPLE_COMPONENTS = 9;
-string dirPath = "../data/aligned_faces_example/example4/";
-//string templatePath = "/home/viviane/FS2020/shape/sm-assignment6/data/face_template/headtemplate_noneck_lesshead_4k.obj";
+int LATENT_DIMENSION = 10;
 vector<float> slider_weights;
 
 // ************************Function Declaration ************************ //
@@ -94,24 +92,19 @@ bool set_V(Eigen::MatrixXd &Vnew){
 }
 
 int main(int argc,char *argv[]){
-	if(argc != 2){
-		cout << "Usage ./train path/to/aligned_faces/" << endl;
-	}else{
-		dirPath = argv[1];
-	}
 
 #ifndef _WIN32
 	int opt;
 	while((opt = getopt(argc, argv, "m:")) != -1){
 		switch(opt){
 			case 'm':
-				PRINCIPLE_COMPONENTS = atoi(optarg);
+				LATENT_DIMENSION = atoi(optarg);
 				break;
 		}
 	}
 #endif
 	// set weights to zero
-	slider_weights = vector<float>(PRINCIPLE_COMPONENTS, 0);
+	slider_weights = vector<float>(LATENT_DIMENSION, 0);
 	//set F from a template file
 	//igl::read_triangle_mesh(templatePath, V, F);
 	//reshape(F_m, F_m.size()/3, 3, V_new);
@@ -127,8 +120,8 @@ int main(int argc,char *argv[]){
 
 		if (ImGui::CollapsingHeader("Parameters", ImGuiTreeNodeFlags_DefaultOpen))
 		{
-			for(int i = 0; i < PRINCIPLE_COMPONENTS; i++){
-				string weight_name = "Eigenvector " + to_string(i);
+			for(int i = 0; i < LATENT_DIMENSION; i++){
+				string weight_name = "Latent " + to_string(i);
 				ImGui::SliderFloat(weight_name.c_str(), &(slider_weights[i]), -1, 1);
 			}
 

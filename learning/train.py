@@ -8,7 +8,7 @@ from torch.nn.functional import pad
 batch_size = 32
 epochs = 1000
 learning_rate = 1e-3
-data_path = '../data/warped_meshes/'
+data_path = '../data/generated/'
 
 if __name__ == "__main__":
     dataset = FaceDataset(data_path)
@@ -29,8 +29,8 @@ if __name__ == "__main__":
             criterion.backward()
             optimizer.step()
         
-        if epoch % 10 == 0:
-            print("{}: {}".format(epoch, criterion.item()))
+        print("{}: {}".format(epoch, criterion.item()))
+        
         if epoch % 100 == 0:
             torch.save(model.state_dict(), 'checkpoints/model-{}.pt'.format(epoch))
 

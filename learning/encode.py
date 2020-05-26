@@ -6,7 +6,7 @@ from torch.nn.functional import pad
 
 
 batch_size = 8
-data_path = '../data/aligned_faces_example/example4'
+data_path = '../data/warped_meshes/'
 
 if __name__ == "__main__":
     dataset = FaceDataset(data_path)
