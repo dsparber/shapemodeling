@@ -40,4 +40,8 @@ target_link_libraries(landmark ${LIBRARY_LIST})
 project(warping)
 add_executable(warping ${SRCFILES} test/warping_main.cpp)
 target_link_libraries(warping ${LIBRARY_LIST})
+
+project(generate)
+add_executable(generate ${SRCFILES} test/generate_faces.cpp)
+target_link_libraries(generate ${LIBRARY_LIST})
 #----------------------------------------------#

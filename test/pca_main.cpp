@@ -29,13 +29,15 @@ Eigen::MatrixXd  W;
 Eigen::VectorXd F_m;
 // place holder
 Eigen::MatrixXd V_new;
+// eigenvalues
+Eigen::VectorXd EV;
 
 bool exampleBool = false;
 int exampleInt = 2;
 
 int PRINCIPLE_COMPONENTS = 9;
-string dirPath = "../data/aligned_faces_example/example4/";
-string templatePath = "../group2_warped/alain_normal_warped.obj";
+string dirPath = "/home/viviane/Downloads/warped_meshes/";
+string templatePath = "../data/face_template/headtemplate_noneck_lesshead_4k.obj";
 vector<float> slider_weights;
 
 // ************************Function Declaration ************************ //
@@ -80,7 +82,7 @@ bool callback_key_pressed(Viewer &viewer, unsigned char key, int modifiers){
 			break;
 		case 'V':	
 		// recompute PCA and set mean face
-			compute_pca("../data/aligned_faces_example/example4/", 9, F_m, W);
+			compute_pca("../data/aligned_faces_example/example4/", 9, F_m, W, EV);
 			reshape(F_m, F_m.size()/3, 3, V_new);
 			set_V(V_new);
 			break;
@@ -114,7 +116,7 @@ bool set_V(Eigen::MatrixXd &Vnew){
 
 
 int main(int argc,char *argv[]){
-	if(argc != 2){
+	if(argc <= 2){
 		cout << "Usage ./pca path/to/aligned_faces/" << endl;
 	}else{
 		dirPath = argv[1];
@@ -136,7 +138,7 @@ int main(int argc,char *argv[]){
 	slider_weights = vector<float>(PRINCIPLE_COMPONENTS, 0);
 	//set F from a template file
 	igl::read_triangle_mesh(templatePath, V, F);
-	compute_pca(dirPath, PRINCIPLE_COMPONENTS, F_m, W);
+	compute_pca(dirPath, PRINCIPLE_COMPONENTS, F_m, W, EV);
 	reshape(F_m, F_m.size()/3, 3, V_new);
 	set_V(V_new);
 

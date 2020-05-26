@@ -19,6 +19,8 @@
 using namespace std;
 using namespace std;
 
+
+
 /**
  * Input:
  * @param dirPath   path to aligned faces directory with M faces
@@ -27,7 +29,7 @@ using namespace std;
  * @param F_m       mean face vector 1xd, d is divisible by 3
  * @param W         dxm matrix consisting of the eigenvectors in its columns
  **/
-void compute_pca(string dirPath, int m, Eigen::VectorXd& F_m, Eigen::MatrixXd& W);
+void compute_pca(string dirPath, int m, Eigen::VectorXd& F_m, Eigen::MatrixXd& W, Eigen::VectorXd& EV);
 
 /**
  * @brief Given a directory, load all meshes in the S matrix where each row represents a face

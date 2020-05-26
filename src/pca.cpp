@@ -49,7 +49,7 @@ void load_faces(string dirPath, Eigen::MatrixXd &S)
     }
 }
 
-void compute_pca(string dirPath, int m, Eigen::VectorXd& mX, Eigen::MatrixXd& E)
+void compute_pca(string dirPath, int m, Eigen::VectorXd& mX, Eigen::MatrixXd& E, Eigen::VectorXd& EV)
 {
     int n, d;
     Eigen::MatrixXd X, X_centered, L; // nxd
@@ -75,4 +75,5 @@ void compute_pca(string dirPath, int m, Eigen::VectorXd& mX, Eigen::MatrixXd& E)
     // return m last eigenvectors, since they are sorted by increasing eigenvalues
     E = u.block(0, n - m, d, m); //dxm matrix of eigenvectors (in cols)
     //TODO: Also save eigenvalues?
+    EV = eigen.eigenvalues().segment(n - m, m);
 }   
