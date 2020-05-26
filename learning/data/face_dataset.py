@@ -18,7 +18,7 @@ class FaceDataset(Dataset):
             tensors.append(vertices.transpose(1, 0))
 
         self.mean_tensor = sum(tensors) / len(tensors)      
-        self.tensors = [tensor - self.mean_tensor for tensor in tensors]
+        self.tensors = tensors
 
     def __len__(self):
         return len(self.tensors)
