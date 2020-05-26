@@ -1,1 +1,1 @@
-from .load_obj import load_obj
+from .obj_utils import load_obj
