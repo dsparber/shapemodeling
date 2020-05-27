@@ -44,14 +44,7 @@ vector<float> slider_weights;
 bool callback_key_pressed(Viewer &viewer, unsigned char key, int modifiers);
 bool load_mesh(string filename);
 bool set_V(Eigen::MatrixXd &Vnew);
-void reshape(Eigen::VectorXd flat, int rows, int cols, Eigen::MatrixXd &matrix);
 // ******************************************************************** //
-
-
-void reshape(Eigen::VectorXd flat, int rows, int cols, Eigen::MatrixXd &matrix){
-	Eigen::Map<Eigen::MatrixXd> M(flat.data(), cols, rows);
-	matrix = Eigen::MatrixXd(M.transpose());
-}
 
 bool callback_key_pressed(Viewer &viewer, unsigned char key, int modifiers){
 	switch (key) {

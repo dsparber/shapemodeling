@@ -33,15 +33,8 @@ string writePath;
 
 
 // ************************Function Declaration ************************ //
-void reshape(Eigen::VectorXd flat, int rows, int cols, Eigen::MatrixXd &matrix);
 void compute_random_face();
 // ******************************************************************** //
-
-
-void reshape(Eigen::VectorXd flat, int rows, int cols, Eigen::MatrixXd &matrix){
-	Eigen::Map<Eigen::MatrixXd> M(flat.data(), cols, rows);
-	matrix = Eigen::MatrixXd(M.transpose());
-}
 
 void compute_random_face(Eigen::MatrixXd &RF){
 	Eigen::VectorXd weights; weights.setZero(W.cols());

@@ -14,6 +14,7 @@ PCA::PCA(int m_, string data_path_, string write_path_, bool small)
 
     igl::read_triangle_mesh(template_path, V_template, F_template);
     load_faces();
+
 }
 
 void PCA::load_template(){
@@ -47,7 +48,6 @@ void PCA::load_faces(){
 
 void PCA::compute_pca()
 {
-    this->load_faces();
     mF = Faces.colwise().mean();
     reshape(mF, mF.size()/3, 3, M);
     if(nFiles < m){
@@ -65,7 +65,7 @@ void PCA::compute_pca()
 }   
 
 
-void PCA::morph_face(const vector<double> &slider){
+void PCA::morph_face(const vector<double> &slider, Eigen::VectorXd &base){
     Eigen::VectorXd weights; weights.resize(m);
     Eigen::VectorXd face;
 
@@ -77,7 +77,20 @@ void PCA::morph_face(const vector<double> &slider){
         weights = Eigen::VectorXd::Zero(m);
     }    
 
-    face = mF + eigenvectors * weights;
+    face = base + eigenvectors * weights;
 
+    reshape(face.transpose(), face.size()/3, 3, V);
+}
+
+
+void PCA::random_face(){
+    std::normal_distribution<double> dist(0.0, variance);
+    Eigen::VectorXd face, random_weights;
+    random_weights.resize(m);
+    face = mF;
+    for(int i = 0; i < m;i++){
+        random_weights[i] = dist(eng);
+    }
+    face = mF + eigenvectors * random_weights;
     reshape(face.transpose(), face.size()/3, 3, V);
 }
