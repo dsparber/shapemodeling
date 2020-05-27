@@ -2,7 +2,7 @@
 #include <igl/read_triangle_mesh.h>
 #include <igl/slice.h>
 #include <igl/writeOBJ.h>
-#include "pca.h"
+#include "common.h"
 #include "warping.h"
 
 void rigid_registration(const std::string &landmarks_template,

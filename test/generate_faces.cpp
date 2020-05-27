@@ -5,7 +5,7 @@
 #ifndef _WIN32
 #include <unistd.h>
 #endif
-#include "../src/pca.h"
+#include "../src/common.h"
 
 using namespace std;
 

@@ -9,7 +9,7 @@
 #include <memory>
 #include <math.h> 
 
-#include "pca.h"
+#include "common.h"
 #include "landmark.h"
 #include "face_alignment.h"
 

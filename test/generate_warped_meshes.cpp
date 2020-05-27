@@ -8,7 +8,7 @@
 #include <Eigen/Dense>
 #include "../src/warping.h"
 #include "../src/rigid_registration.h"
-#include "../src/pca.h"
+#include "../src/common.h"
 
 using namespace std;
 using namespace Eigen;
