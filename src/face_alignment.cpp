@@ -18,25 +18,30 @@ void FaceAlignmentManager::callback_draw_viewer_menu() {
     ImGui::Begin("Face Alignment", nullptr);
 
     if (ImGui::CollapsingHeader("Rigid Registration", ImGuiTreeNodeFlags_DefaultOpen)) {
-        ImGui::Text("Paths for registration,\nthe order is:\n- template\n- template landmarks\n- scan\n- scan landmarks");
 
-        if (ImGui::Button("Browse")) {
-            path_template = igl::file_dialog_open();
+        ImGui::InputText("Template mesh", path_template);
+        ImGui::InputText("Template landmarks", path_landmarks_template);
 
-            path_landmarks_template = igl::file_dialog_open();
-
+        if (ImGui::Button("Browse scan mesh")) {
             path_scan = igl::file_dialog_open();
 
+            if (path_scan.length() > 0)
+                std::cout << "Successfully set the scan mesh path to: " << path_scan << std::endl;
+            else
+                std::cout << "The provided path was empty, please repeat." << std::endl;
+        }
+
+        if (ImGui::Button("Browse scan landmarks")) {
             path_landmarks_scan = igl::file_dialog_open();
 
-            if (path_template.length() > 0 && path_scan.length() > 0 && path_landmarks_template.length() > 0 && path_landmarks_scan.length() > 0)
-                std::cout << "Successfully set paths for face alignments." << std::endl;
+            if (path_landmarks_scan.length() > 0)
+                std::cout << "Successfully set scan landmarks path to: " << path_landmarks_scan << std::endl;
             else
-                std::cout << "One of the provided paths was empty, please repeat." << std::endl;
+                std::cout << "The provided path was empty, please repeat." << std::endl;
         }
 
         if (ImGui::Button("Rigidly align")) {
-            if (path_template.length() > 0 && path_scan.length() > 0 && path_landmarks_template.length() > 0 && path_landmarks_scan.length() > 0)
+            if (path_scan.length() > 0 && path_landmarks_scan.length() > 0)
                 rigidly_align();
             else
                 std::cout << "Rigid alignment failed: One of the provided paths was empty." << std::endl;
@@ -47,6 +52,7 @@ void FaceAlignmentManager::callback_draw_viewer_menu() {
         ImGui::InputDouble("Lambda", &lambda);
         ImGui::InputInt("Iterations", &iterations);
         ImGui::InputDouble("Rel. dist. threshold", &relative_distance_threshold);
+        ImGui::Checkbox("Use landmark constraints", &use_landmark_constraints);
 
         if (ImGui::Button("Warp")) {
             warp();
@@ -108,7 +114,7 @@ void FaceAlignmentManager::warp() {
         std::cout << "Cannot warp: Rigid alignment failed." << std::endl;
         return;
     }
-    warping->warp(lambda, iterations, relative_distance_threshold, V_warped, F_warped);
+    warping->warp(lambda, iterations, relative_distance_threshold, use_landmark_constraints, V_warped, F_warped);
     std::cout << "Press '3' for the warped face." << std::endl;
     show_mesh(3);
 }

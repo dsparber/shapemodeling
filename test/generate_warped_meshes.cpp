@@ -19,6 +19,7 @@ int main(int argc, char *argv[])
     double lambda = 0.3;
     int iterations = 5;
     double threshold = 0.017;
+    bool use_landmark_constraints = false;
     std::string scan_folder = "../data/scans";                                  // Path to folder with scans.
     std::string path_template_obj = "../data/face_template/template_small.obj"; // Path to template.obj.
     std::string path_template_txt = "../data/face_template/template_small.txt"; // Path to template.txt
@@ -30,12 +31,13 @@ int main(int argc, char *argv[])
     outfile << "threshold = " << threshold << endl;
     outfile << "lambda = " << lambda << endl;
     outfile << "iterations = " << iterations << endl;
+    outfile << "use landmark constraints = " << use_landmark_constraints << endl;
     outfile.close();
 
     warp_meshes_to_folder(scan_folder,
                           path_template_obj,
                           path_template_txt,
                           output_folder,
-                          lambda, iterations, threshold);
+                          lambda, iterations, threshold, use_landmark_constraints);
     return 0;
 }

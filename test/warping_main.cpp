@@ -36,6 +36,7 @@ std::shared_ptr<Warping> warping;
 double lambda = 1;
 int iterations = 1;
 double relative_distance_threshold = 0.01;
+bool use_landmark_constraints = false;
 std::string result_path = "../data/landmarks_example/person0_warped.obj";
 
 bool callback_key_pressed(Viewer &viewer, unsigned char key, int modifiers) {
@@ -52,7 +53,7 @@ bool callback_key_pressed(Viewer &viewer, unsigned char key, int modifiers) {
 		break;
 	case '3':
 		// Compute warping and show it
-		warping->warp(lambda, iterations, relative_distance_threshold, V_warped, F_warped);
+		warping->warp(lambda, iterations, relative_distance_threshold, use_landmark_constraints, V_warped, F_warped);
 		viewer.data().clear();
 		viewer.data().set_mesh(V_warped, F_warped);
 		break;
@@ -112,6 +113,7 @@ int main(int argc, char *argv[]) {
 			ImGui::InputDouble("Lambda", &lambda);
 			ImGui::InputInt("Iterations", &iterations);
 			ImGui::InputDouble("Rel. dist. threshold", &relative_distance_threshold);
+			ImGui::Checkbox("Use landmark constraints", &use_landmark_constraints);
 			ImGui::InputText("Store in ...", result_path);
 		}
 	};

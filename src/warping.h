@@ -33,6 +33,7 @@ public:
 	* @param lambda  -  regularization factor
 	* @param iterations  -  number of warping iterations
 	* @param relative_distance_threshold  -  distance threshold to determine which vertices should be fixed as targets, relative to diagonal of template bounding box
+	* @param use_landmark_constraints  -  set to true to use the landmarks as part of the constraints
 	* Output:
 	* @param V_warped  -  vertices of the warped mesh
 	* @param F_warped  -  faces of the warped mesh
@@ -41,6 +42,7 @@ public:
 		const double lambda,
 		const int iterations,
 		const double relative_distance_threshold,
+		const bool use_landmark_constraints,
 		Eigen::MatrixXd &V_warped,
 		Eigen::MatrixXi &F_warped // this output is currently only provided as an easy interface for other users and is the same as F_template
 	);
@@ -71,6 +73,7 @@ private:
 	* @param lambda  -  regularization factor
 	* @param absolute_distance_threshold  -  distance threshold to determine which vertices should be fixed as targets, absolute value
 	* @param iteration_number  -  the current iteration number, used for user notification
+	* @param use_landmark_constraints  -  set to true to use the landmarks as part of the constraints
 	* @param V_current  -  vertices of the current template warping state
 	* Output:
 	* @param V_next  -  vertices of the warping state after one additional iteration
@@ -79,6 +82,7 @@ private:
 		const double lambda,
 		const double absolute_distance_threshold,
 		const int iteration_number,
+		const bool use_landmark_constraints,
 		Eigen::MatrixXd &V_current,
 		Eigen::MatrixXd &V_next
 	);
@@ -87,12 +91,14 @@ private:
 	*
 	* Input:
 	* @param absolute_distance_threshold  -  distance threshold to determine which vertices should be fixed as targets, absolute value
+	* @param use_landmark_constraints  -  set to true to use the landmarks as part of the constraints
 	* Output:
 	* @param C  -  constraint matrix (Id|constr on the exercise slides)
 	* @param D  -  target matrix with 3 columns (c on the exercise slides)
 	*/
 	void create_constraints_and_targets(
 		const double absolute_distance_threshold,
+		const bool use_landmark_constraints,
 		Eigen::SparseMatrix<double> &C,
 		Eigen::MatrixXd &D
 	);

@@ -50,10 +50,10 @@ void rigid_registration(const std::string &landmarks_template,
  * @param lambda : regularization parameter for warping.
  * @param iterations : number of warping iterations.
  * @param relative_distance_threshold : distance threshold for warping.
+ * @param use_landmark_constraints : set to true to use the landmarks as constraints for warping
  */
 void warp_meshes_to_folder(const std::string &folder_scans, const std::string &template_obj,
                            const std::string template_txt, const std::string output_path,
-                           const double lambda, const int &iterations,
-                           const double relative_distance_threshold);
+                           const double lambda, const int &iterations, const double relative_distance_threshold, const bool use_landmark_constraints);
 
 #endif

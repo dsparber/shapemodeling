@@ -22,15 +22,16 @@ public:
     bool callback_key_pressed(Viewer& viewer, unsigned char key, int modifier);
 
     // parameters rigid registration
-    std::string path_template = "../data/landmarks_example/headtemplate.obj";
+    std::string path_template = "../data/face_template/template_small.obj";
+    std::string path_landmarks_template = "../data/face_template/template_small.txt";
     std::string path_scan = "../data/landmarks_example/person0_.obj";
-    std::string path_landmarks_template = "../data/landmarks_example/headtemplate_23landmarks";
     std::string path_landmarks_scan = "../data/landmarks_example/person0__23landmarks";
 
     // parameters warping
     double lambda = 1;
     int iterations = 1;
     double relative_distance_threshold = 0.01;
+    bool use_landmark_constraints = false;
     std::string result_path = "../data/landmarks_example/person0_alignment_result.obj";
 
 private:
