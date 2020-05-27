@@ -32,7 +32,6 @@ class PointNetAutoencoder(nn.Module):
             nn.Dropout(p=0.3),
             nn.ReLU(True),
             nn.Linear(in_features=256, out_features=10),
-            nn.Tanh(),
         )
         self.decoder = nn.Sequential(
             nn.Linear(in_features=10, out_features=256),

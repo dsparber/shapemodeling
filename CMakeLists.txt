@@ -48,4 +48,8 @@ target_link_libraries(generate ${LIBRARY_LIST})
 project(warp_meshes)
 add_executable(warp_meshes ${SRCFILES} test/generate_warped_meshes.cpp)
 target_link_libraries(warp_meshes ${LIBRARY_LIST})
+
+project(train)
+add_executable(train ${SRCFILES} test/train_main.cpp)
+target_link_libraries(train ${LIBRARY_LIST})
 #----------------------------------------------#
