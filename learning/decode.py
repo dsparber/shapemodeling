@@ -8,12 +8,17 @@ from torch.nn import MSELoss
 from torch.nn.functional import pad
 from data.obj_utils import write_obj, load_obj
 
-model = PointNetAutoencoder(2319)
+large = False
+n = 22779 if large else 2319
+saved_model = 'model_large.pt' if large else 'model.pt'
+model = PointNetAutoencoder(n)
 model.load_state_dict(torch.load('model.pt'))
 
-data_path = '../data/warped_meshes/'
+data_path = '../data/warped_meshes_high_res/'
 template = glob.glob(os.path.join(data_path, "*.obj"))[0]
 _, f = load_obj(template)
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model = model.to(device)
 
 def export(x):
     write_obj('learning_out.obj', x, f)

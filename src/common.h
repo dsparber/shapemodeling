@@ -43,4 +43,7 @@ void findFilesWithExt(const string &dirPath, const string &ext, vector<string> &
  * @param matrix    output matrix
  */
 void reshape(Eigen::VectorXd flat, int rows, int cols, Eigen::MatrixXd &matrix);
+
+void compute_pca(string dirPath, int m, Eigen::VectorXd& F_m, Eigen::MatrixXd& W, Eigen::VectorXd& eigenvalues);
+void load_faces(string dir, Eigen::MatrixXd &X);
 #endif // COMMON_H_

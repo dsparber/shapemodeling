@@ -9,7 +9,8 @@
 #include <map>
 #include <string>
 #include <vector>
-
+#include <random>
+#include <chrono>
 #ifdef _WIN32
 #include "dirent.h"
 #else
@@ -43,6 +44,7 @@ class PCA{
         unsigned int n = 2319;
         unsigned int nFiles;
 
+        double variance = 0.1;
 
         void compute_pca();
 
@@ -53,12 +55,14 @@ class PCA{
         void load_faces();
         void get_template(Eigen::MatrixXd &V, Eigen::MatrixXi &F);
         void load_template();
-        void morph_face(const vector<double> &slider);
+        void morph_face(const vector<double> &slider, Eigen::VectorXd &base);
+        void random_face();
 
     private:
         const string s_template_path = "../data/face_template/template_small.obj";
         const string l_template_path = "../data/face_template/template.obj";
         vector<string> listOfFiles;
+        std::mt19937 eng{std::chrono::high_resolution_clock::now().time_since_epoch().count()};
 };
 
 

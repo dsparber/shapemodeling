@@ -11,7 +11,6 @@
 #include <vector>
 
 using namespace std;
-using namespace Eigen;
 
 using Viewer = igl::opengl::glfw::Viewer;
 
@@ -21,10 +20,12 @@ bool s = true;
 string data_path = "../data/aligned_faces_example/default";
 string write_path = "./";
 string write_file = "default.obj";
-
+string inputFile = "../data/face_template/template_small.obj";
 vector<double> slider;
 double minS = -1.0;
 double maxS = 1.0;
+double zero = 0.0;
+Eigen::VectorXd base;
 
 Viewer viewer;
 std::shared_ptr<PCA> pca;
@@ -48,18 +49,22 @@ bool draw_viewer_menu(){
         bool change = false;
         for(int i = 0; i < m; i++){
             string slider_name = "Eigenvector " + to_string(i);
-            if(ImGui::SliderScalar(slider_name.c_str(), ImGuiDataType_Double, &(slider[i]), &minS, &maxS)){
+            if(ImGui::SliderScalar(slider_name.c_str(), ImGuiDataType_Double, &(slider[m-(i+1)]), &minS, &maxS)){
                 change = true;
             }
         }
         if(change){
-            pca->morph_face(slider);
+            pca->morph_face(slider, base);
             reload();
         }
     }
 
+    ImGui::SliderScalar("var", ImGuiDataType_Double, &(pca->variance), &zero, &maxS);
+
     if(ImGui::Button("Reset weights")){
         slider = vector<double>(m, 0.0);
+		pca->morph_face(slider, base);
+		reload();		
     }
 
     if(ImGui::Button("Write to File")){
@@ -73,6 +78,27 @@ bool draw_viewer_menu(){
     ImGui::InputText("", write_file);
     ImGui::PopID();
     ImGui::PopItemWidth();
+
+
+    ImGui::PushItemWidth(-40);
+    ImGui::PushID("Input File##Landmark");
+
+    ImGui::InputText("", inputFile);
+    ImGui::PopID();
+    ImGui::PopItemWidth();
+
+    if (ImGui::CollapsingHeader("Load Base", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        float w = ImGui::GetContentRegionAvailWidth();
+        float p = ImGui::GetStyle().FramePadding.x;
+        if (ImGui::Button("Load##Mesh", ImVec2((w-p), 0)))
+        {
+            std::string fname = igl::file_dialog_open();
+            igl::read_triangle_mesh(fname, pca->V, pca->F);
+            base = Eigen::Map<Eigen::VectorXd>(pca->V.transpose().data(), pca->V.size()) - pca->mF;
+            reload();
+        }
+    }
 
 }
 bool callback_key_down(Viewer &viewer, unsigned char key, int modifiers){
@@ -89,7 +115,7 @@ bool callback_mouse_move(Viewer &viewer, int mouse_x, int mouse_y){
 }
 
 bool callback_mouse_up(Viewer &viewer, int button, int modifier){
-    pca->morph_face(slider);
+    pca->morph_face(slider, base);
     reload();
     return true;
 }
@@ -97,12 +123,18 @@ bool callback_mouse_up(Viewer &viewer, int button, int modifier){
 bool callback_key_pressed(Viewer &viewer, unsigned char key, int modifiers){
 	switch (key) {
 	case '1':
-        pca->morph_face(slider);
+        pca->morph_face(slider, base);
         reload();
 		break;
     case '2':
         pca->V = pca->M;
+        base = pca->mF;
         reload();
+		break;
+	case 'R':
+		pca->random_face();
+		reload();
+		break;
 	}
     
     return true;
@@ -139,13 +171,14 @@ int main(int argc,char *argv[]){
     pca->load_template();
     reload();
     pca->compute_pca();
+	base = pca->mF;
     cout << "computed pca" << endl;
 	igl::opengl::glfw::imgui::ImGuiMenu menu;
 	viewer.plugins.push_back(&menu);
 
 	menu.callback_draw_viewer_menu = [&]()
 	{
-		menu.draw_viewer_menu();
+        // menu.draw_viewer_menu();
         draw_viewer_menu();
 	};
 
