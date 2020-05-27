@@ -12,6 +12,7 @@
 #include "common.h"
 #include "landmark.h"
 #include "face_alignment.h"
+#include "learning.h"
 
 using namespace std;
 using namespace Eigen;
@@ -31,12 +32,16 @@ std::unique_ptr<LandmarkManager> landmarkManager;
 // Unique pointer to face alignment manager
 std::unique_ptr<FaceAlignmentManager> faceAlignmentManager;
 
+// Unique pointer to learning manager
+std::unique_ptr<LearningManager> learningManager;
+
+
 // Pipeline mode for showing different window
 enum PipelineMode {
 	LANDMARK_MODE = 0,
 	FACE_ALIGNMENT_MODE,
 	PCA_MODE,
-	BONUS_MODE
+	LEARNING_MODE
 };
 
 enum PipelineMode pipelineMode = LANDMARK_MODE;
@@ -94,6 +99,17 @@ bool callback_key_pressed(Viewer &viewer, unsigned char key, int modifier) {
 	else if (pipelineMode == FACE_ALIGNMENT_MODE) {
 		// Passing on key pressed event to face alignment manager
 		faceAlignmentManager->callback_key_pressed(viewer, key, modifier);
+	}
+	else if (pipelineMode == LEARNING_MODE) {
+		// Passing on key pressed event to learning manager
+		learningManager->callback_key_pressed(viewer, key, modifier);
+		// Checking if learning manager tells main to update mesh
+		if (learningManager->updateMesh) {
+			// Loading new mesh created with learning python script
+			load_mesh(learningManager->outputMesh);
+			// Resetting mesh update flag of learning manager 
+			learningManager->updateMesh = false;
+		}
 	}
 
 	return false;
@@ -155,6 +171,9 @@ int main(int argc,char *argv[]) {
 	// Initialize face alignment manager
 	faceAlignmentManager = std::unique_ptr<FaceAlignmentManager>(new FaceAlignmentManager(viewer));
 
+	// Initialize learning manager
+	learningManager = std::unique_ptr<LearningManager>(new LearningManager(viewer));
+
 	igl::opengl::glfw::imgui::ImGuiMenu menu;
 	viewer.plugins.push_back(&menu);
 
@@ -168,15 +187,15 @@ int main(int argc,char *argv[]) {
 
 		if (ImGui::CollapsingHeader("Parameters", ImGuiTreeNodeFlags_DefaultOpen)) {
 
-			const char* mode[] = {"Landmark", "Face Alignment", "PCA", "Bonus"};
+			const char* mode[] = {"Landmark", "Face Alignment", "PCA", "Learning"};
             int index = pipelineMode;
             if (ImGui::Combo("Pipeline Mode", &index, mode, IM_ARRAYSIZE(mode))) {
                 // Updating pipeline mode
                 pipelineMode = static_cast<enum PipelineMode>(index);
             }
 
-			ImGui::Checkbox("Example Boolean", &exampleBool);
-			ImGui::InputInt("Example Integer", &exampleInt);
+			//ImGui::Checkbox("Example Boolean", &exampleBool);
+			//ImGui::InputInt("Example Integer", &exampleInt);
 			
 		}
 
@@ -186,6 +205,17 @@ int main(int argc,char *argv[]) {
 		}
 		else if (pipelineMode == FACE_ALIGNMENT_MODE) {
 			faceAlignmentManager->callback_draw_viewer_menu();
+		}
+		else if (pipelineMode == LEARNING_MODE) {
+			// Drawing custom learning window menu
+			learningManager->callback_draw_viewer_menu();
+			// Checking if learning manager tells main to update mesh
+			if (learningManager->updateMesh) {
+				// Loading new mesh created with learning python script
+				load_mesh(learningManager->outputMesh);
+				// Resetting mesh update flag of learning manager 
+				learningManager->updateMesh = false;
+			}
 		}
 
 	};

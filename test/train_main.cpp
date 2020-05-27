@@ -13,8 +13,6 @@
 
 #include "../src/learning.h"
 
-using namespace std;
-
 using Viewer = igl::opengl::glfw::Viewer;
 
 Viewer viewer;
@@ -36,8 +34,8 @@ std::unique_ptr<LearningManager> learningManager;
 
 // ************************Function Declaration ************************ //
 bool callback_key_pressed(Viewer &viewer, unsigned char key, int modifiers);
-bool load_mesh(string filename);
-// ******************************************************************** //
+bool load_mesh(const std::string &filename);
+// ********************************************************************* //
 
 
 bool callback_key_pressed(Viewer &viewer, unsigned char key, int modifier){
@@ -64,9 +62,10 @@ bool callback_key_pressed(Viewer &viewer, unsigned char key, int modifier){
 	}
 
 	return true;
+
 }
 
-bool load_mesh(string filename){
+bool load_mesh(const std::string &filename){
 	
 	igl::read_triangle_mesh(filename,V,F);
 	viewer.data().clear();
@@ -90,6 +89,7 @@ int main(int argc,char *argv[]){
 		// Draw parent menu content
 		menu.draw_viewer_menu();
 
+		// Drawing custom learning window menu
 		learningManager->callback_draw_viewer_menu();
 		// Checking if learning manager tells main to update mesh
 		if (learningManager->updateMesh) {
@@ -105,5 +105,5 @@ int main(int argc,char *argv[]){
 	viewer.launch();
 
 	return 0;
-	
+
 }
