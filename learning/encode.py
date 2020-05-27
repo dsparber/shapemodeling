@@ -19,5 +19,6 @@ if __name__ == "__main__":
     with torch.set_grad_enabled(False):
 
         for x in data_loader:
+            model.eval()
             z = model.encode(x)
             print(z)

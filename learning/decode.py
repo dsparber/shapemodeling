@@ -19,7 +19,8 @@ def export(x):
 
 def decode(z):
     with torch.set_grad_enabled(False):
-        z_tensor = torch.tensor([z, z]).view(2, len(z))
+        model.eval()
+        z_tensor = torch.tensor([z]).view(1, len(z))
         x = model.decode(z_tensor)
         x = x[0].transpose(1, 0)
         export(x)
@@ -32,6 +33,5 @@ if __name__ == "__main__":
     parser.add_argument('z', metavar='N', type=float, nargs='+')
     args = parser.parse_args()
     z = args.z
-    print(z)
-    print(decode(z))
+    decode(z)
 
