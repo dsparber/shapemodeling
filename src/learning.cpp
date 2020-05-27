@@ -113,13 +113,13 @@ void LearningManager::callback_draw_viewer_menu() {
 bool LearningManager::callback_key_pressed(Viewer &viewer, unsigned char key, int modifier) {
 
     switch (key) {
-        case 'R': 
+        case 'r': 
             // Resetting slider weights
             for (int i = 0; i < sliderWeights.size(); ++i){
                 sliderWeights[i] = 0.0f;
             }  
             break;
-        case 'L': 
+        case 'p': 
             // Constructing argument string
             std::stringstream arguments;
             for (float w : sliderWeights) {
@@ -137,7 +137,7 @@ bool LearningManager::callback_key_pressed(Viewer &viewer, unsigned char key, in
             break;
     }
 
-    return true;
+    return false;
 
 }
 
