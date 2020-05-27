@@ -10,11 +10,12 @@ from data.obj_utils import write_obj, load_obj
 
 model = PointNetAutoencoder(2319)
 model.load_state_dict(torch.load('model.pt'))
+
 data_path = '../data/warped_meshes/'
+template = glob.glob(os.path.join(data_path, "*.obj"))[0]
+_, f = load_obj(template)
 
 def export(x):
-    template = glob.glob(os.path.join(data_path, "*.obj"))[0]
-    _, f = load_obj(template)
     write_obj('learning_out.obj', x, f)
 
 def decode(z):
