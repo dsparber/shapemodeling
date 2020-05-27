@@ -8,7 +8,8 @@ from torch.nn.functional import pad
 batch_size = 32
 epochs = 1000
 learning_rate = 1e-3
-data_path = '../data/generated/'
+data_path = '../data/warped_meshes/'
+pretrained_model = 'checkpoints/model-300.pt'
 
 if __name__ == "__main__":
     dataset = FaceDataset(data_path)
@@ -17,6 +18,8 @@ if __name__ == "__main__":
     num_points = dataset.num_points()
     
     model = PointNetAutoencoder(num_points)
+    if pretrained_model is not None:
+        model.load_state_dict(torch.load(pretrained_model))
     loss_fn = MSELoss()
     optimizer = torch.optim.Adamax(model.parameters(), lr=learning_rate, eps=1e-7)
 
