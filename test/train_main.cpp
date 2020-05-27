@@ -44,7 +44,14 @@ vector<float> slider_weights;
 bool callback_key_pressed(Viewer &viewer, unsigned char key, int modifiers);
 bool load_mesh(string filename);
 bool set_V(Eigen::MatrixXd &Vnew);
+void reshape(Eigen::VectorXd flat, int rows, int cols, Eigen::MatrixXd &matrix);
 // ******************************************************************** //
+
+
+void reshape(Eigen::VectorXd flat, int rows, int cols, Eigen::MatrixXd &matrix){
+	Eigen::Map<Eigen::MatrixXd> M(flat.data(), cols, rows);
+	matrix = Eigen::MatrixXd(M.transpose());
+}
 
 bool callback_key_pressed(Viewer &viewer, unsigned char key, int modifiers){
 	switch (key) {
@@ -115,7 +122,7 @@ int main(int argc,char *argv[]){
 		{
 			for(int i = 0; i < LATENT_DIMENSION; i++){
 				string weight_name = "Latent " + to_string(i);
-				ImGui::SliderFloat(weight_name.c_str(), &(slider_weights[i]), -1, 1);
+				ImGui::SliderFloat(weight_name.c_str(), &(slider_weights[i]), -100, 100);
 			}
 
             if (ImGui::Button("Run")) {
