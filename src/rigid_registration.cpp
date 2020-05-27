@@ -137,7 +137,7 @@ void rigid_registration_core(const Eigen::MatrixXd &V_template,
 
 void warp_meshes_to_folder(const std::string &folder_scans, const std::string &template_obj,
                            const std::string template_txt, const std::string output_path,
-                           const double lambda, const int &iterations, const double relative_distance_threshold)
+                           const double lambda, const int &iterations, const double relative_distance_threshold, const bool use_landmark_constraints)
 {
     vector<string> obj_files;
     findFilesWithExt(folder_scans, ".obj", obj_files);
@@ -164,7 +164,7 @@ void warp_meshes_to_folder(const std::string &folder_scans, const std::string &t
         // Then warp the template to scan.
         std::shared_ptr<Warping> warp;
         warp = std::shared_ptr<Warping>(new Warping(W_template, W_scan, F_template, F_scan, landmarks));
-        warp->warp(lambda, iterations, relative_distance_threshold, V_warped, F_warped);
+        warp->warp(lambda, iterations, relative_distance_threshold, use_landmark_constraints, V_warped, F_warped);
 
         // Finally translate vertices such that their mean is in 0.
         Eigen::VectorXd mean;

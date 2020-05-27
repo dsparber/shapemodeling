@@ -65,6 +65,7 @@ int main(int argc,char *argv[]){
 	}
 
 	int opt;
+#ifndef _WIN32
 	while((opt = getopt(argc, argv, "d:m:t:n:")) != -1){
 		switch(opt){
 			case 'm':
@@ -81,6 +82,7 @@ int main(int argc,char *argv[]){
                 break;
 		}
 	}
+#endif
 
 	//set F from a template file
 	bool success = igl::read_triangle_mesh(templatePath, V, F);

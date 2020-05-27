@@ -18,7 +18,7 @@ Warping::Warping(const Eigen::MatrixXd &V_template, const Eigen::MatrixXd &V_sca
 
 Warping::~Warping() {/* empty? */}
 
-void Warping::warp(const double lambda, const int iterations, const double relative_distance_threshold, Eigen::MatrixXd &V_warped, Eigen::MatrixXi &F_warped) {
+void Warping::warp(const double lambda, const int iterations, const double relative_distance_threshold, const bool use_landmark_constraints, Eigen::MatrixXd &V_warped, Eigen::MatrixXi &F_warped) {
 	std::cout << "Started warping" << std::endl;
 	// set F_warped to F_template since it does not change
 	F_warped = F_template;
@@ -31,7 +31,7 @@ void Warping::warp(const double lambda, const int iterations, const double relat
 	Eigen::MatrixXd V_current, V_next;
 	V_current = V_template;
 	for (int i = 0; i < iterations; i++) {
-		Warping::warping_iteration(lambda, absolute_distance_threshold, i, V_current, V_next);
+		Warping::warping_iteration(lambda, absolute_distance_threshold, i, use_landmark_constraints, V_current, V_next);
 		V_current = V_next;
 	}
 	V_warped = V_current;
@@ -55,13 +55,13 @@ void Warping::store_last_result_to_obj_file(
 	}
 }
 
-void Warping::warping_iteration(const double lambda, const double absolute_distance_threshold, const int iteration_number, Eigen::MatrixXd &V_current, Eigen::MatrixXd &V_next) {
+void Warping::warping_iteration(const double lambda, const double absolute_distance_threshold, const int iteration_number, const bool use_landmark_constraints, Eigen::MatrixXd &V_current, Eigen::MatrixXd &V_next) {
 	std::cout << "Warping iteration " << iteration_number << std::endl;
 
 	// create constraints
 	Eigen::SparseMatrix<double> C;
 	Eigen::MatrixXd D;
-	create_constraints_and_targets(absolute_distance_threshold, C, D);
+	create_constraints_and_targets(absolute_distance_threshold, use_landmark_constraints, C, D);
 
 	// get cotangent laplacian
 	Eigen::SparseMatrix<double> L;
@@ -81,7 +81,7 @@ void Warping::warping_iteration(const double lambda, const double absolute_dista
 	V_next = cholesky.solve(rhs);
 }
 
-void Warping::create_constraints_and_targets(const double absolute_distance_threshold, Eigen::SparseMatrix<double> &C, Eigen::MatrixXd &D) {
+void Warping::create_constraints_and_targets(const double absolute_distance_threshold, const bool use_landmark_constraints, Eigen::SparseMatrix<double> &C, Eigen::MatrixXd &D) {
 	// compute boundary targets
 	Eigen::VectorXi boundary_indices;
 	Eigen::MatrixXd boundary_targets;
@@ -89,9 +89,12 @@ void Warping::create_constraints_and_targets(const double absolute_distance_thre
 	igl::slice(V_template, boundary_indices, 1, boundary_targets);
 
 	// landmark constraints are already given
-	Eigen::VectorXi landmark_indices = landmarks.first;
+	Eigen::VectorXi landmark_indices;
 	Eigen::MatrixXd landmark_targets;
-	igl::slice(V_scan, landmarks.second, 1, landmark_targets);
+	if (use_landmark_constraints) {
+		landmark_indices = landmarks.first;
+		igl::slice(V_scan, landmarks.second, 1, landmark_targets);
+	}
 
 	// compute closest point on scan for template vertices, create targets by absolute distance threshold
 	Eigen::MatrixXd closest_scan_vertices;

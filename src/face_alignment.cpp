@@ -47,6 +47,7 @@ void FaceAlignmentManager::callback_draw_viewer_menu() {
         ImGui::InputDouble("Lambda", &lambda);
         ImGui::InputInt("Iterations", &iterations);
         ImGui::InputDouble("Rel. dist. threshold", &relative_distance_threshold);
+        ImGui::Checkbox("Use landmark constraints", &use_landmark_constraints);
 
         if (ImGui::Button("Warp")) {
             warp();
@@ -108,7 +109,7 @@ void FaceAlignmentManager::warp() {
         std::cout << "Cannot warp: Rigid alignment failed." << std::endl;
         return;
     }
-    warping->warp(lambda, iterations, relative_distance_threshold, V_warped, F_warped);
+    warping->warp(lambda, iterations, relative_distance_threshold, use_landmark_constraints, V_warped, F_warped);
     std::cout << "Press '3' for the warped face." << std::endl;
     show_mesh(3);
 }

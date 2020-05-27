@@ -31,6 +31,7 @@ public:
     double lambda = 1;
     int iterations = 1;
     double relative_distance_threshold = 0.01;
+    bool use_landmark_constraints = false;
     std::string result_path = "../data/landmarks_example/person0_alignment_result.obj";
 
 private:
