@@ -20,28 +20,6 @@
 using namespace std;
 
 
-
-/**
- * Input:
- * @param dirPath   path to aligned faces directory with M faces
- * @param m         number of principle components 
- * Output:  
- * @param F_m       mean face vector 1xd, d is divisible by 3
- * @param W         dxm matrix consisting of the eigenvectors in its columns
- **/
-void compute_pca(string dirPath, int m, Eigen::VectorXd& F_m, Eigen::MatrixXd& W, Eigen::VectorXd& EV);
-
-/**
- * @brief Given a directory, load all meshes in the S matrix where each row represents a face
- * Input:
- * @param dir       path to aligned faces directory with M faces
- * Output:
- * @param X         Mxd matrix with each row being a face vector  
- * 
- **/
-void load_faces(string dir, Eigen::MatrixXd &X);
-
-//////////////////////////////////TODO: put into common.h/////////////////////////////////////
 bool hasSuffix(const string& s, const string& suffix);
 
 /**
@@ -53,6 +31,16 @@ bool hasSuffix(const string& s, const string& suffix);
  * @param listOfFiles   vector of filenames
  **/
 void findFilesWithExt(const string &dirPath, const string &ext, vector<string> &listOfFiles);
-/////////////////////////////////////////////////////////////////////////////////////////////
 
+
+/**
+ * @brief Reshape vector into matrix
+ * Input:
+ * @param flat      input vector
+ * @param rows      row dimension of matrix
+ * @param cols      column dimension of matrix
+ * Output:
+ * @param matrix    output matrix
+ */
+void reshape(Eigen::VectorXd flat, int rows, int cols, Eigen::MatrixXd &matrix);
 #endif // COMMON_H_

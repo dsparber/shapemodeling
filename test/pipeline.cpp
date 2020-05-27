@@ -45,9 +45,16 @@ bool draw_viewer_menu(){
     
     if (ImGui::CollapsingHeader("Parameters", ImGuiTreeNodeFlags_DefaultOpen))
     {
+        bool change = false;
         for(int i = 0; i < m; i++){
             string slider_name = "Eigenvector " + to_string(i);
-            ImGui::SliderScalar(slider_name.c_str(), ImGuiDataType_Double, &(slider[i]), &minS, &maxS);
+            if(ImGui::SliderScalar(slider_name.c_str(), ImGuiDataType_Double, &(slider[i]), &minS, &maxS)){
+                change = true;
+            }
+        }
+        if(change){
+            pca->morph_face(slider);
+            reload();
         }
     }
 
@@ -57,7 +64,7 @@ bool draw_viewer_menu(){
 
     if(ImGui::Button("Write to File")){
         string full_write_path = write_path + write_file;
-        cout << "Written to" << full_write_path << endl;
+        cout << "Written tocd " << full_write_path << endl;
         igl::writeOBJ(full_write_path, pca->V, pca->F);
     }
 
@@ -145,7 +152,7 @@ int main(int argc,char *argv[]){
     // viewer.callback_key_down = callback_key_down;
     // viewer.callback_mouse_down = callback_mouse_down;
     // viewer.callback_mouse_move = callback_mouse_move;
-    viewer.callback_mouse_up = callback_mouse_up;
+    // viewer.callback_mouse_up = callback_mouse_up;
 	viewer.callback_key_pressed = callback_key_pressed;
 
 	viewer.launch();

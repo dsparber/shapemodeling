@@ -43,17 +43,19 @@ class PCA{
         unsigned int n = 2319;
         unsigned int nFiles;
 
+
         void compute_pca();
+
+        /**
+         * @brief Load all meshes from data_path in the Face matrix where each row represents a face
+         * 
+         **/
         void load_faces();
         void get_template(Eigen::MatrixXd &V, Eigen::MatrixXi &F);
         void load_template();
         void morph_face(const vector<double> &slider);
 
     private:
-        void findFilesWithExt(const string &dirPath, const string &ext, vector<string> &listOfFiles);
-        bool hasSuffix(const string& s, const string& suffix);
-        void reshape(Eigen::VectorXd flat, int rows, int cols, Eigen::MatrixXd &matrix);
-
         const string s_template_path = "../data/face_template/template_small.obj";
         const string l_template_path = "../data/face_template/template.obj";
         vector<string> listOfFiles;

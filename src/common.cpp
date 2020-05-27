@@ -23,57 +23,7 @@ void findFilesWithExt(const string &dirPath, const string &ext, vector<string> &
     closedir(dir);
 }
 
-void load_faces(string dirPath, Eigen::MatrixXd &S)
-{
-    vector<string> listOfFiles;
-    string filepath;
-    Eigen::MatrixXd V;
-    Eigen::MatrixXd F;
-    int nbFaces;
-    int nbPoints;
-    string ext = ".obj";
-    findFilesWithExt(dirPath, ext, listOfFiles);
-
-    nbFaces = listOfFiles.size();
-    filepath = dirPath + "/" + listOfFiles.front();
-    igl::read_triangle_mesh(filepath, V, F);
-    nbPoints = V.rows();
-    S.setZero(nbFaces, 3*nbPoints);
-    for(int i = 0; i < nbFaces; i++){
-        filepath = dirPath + "/" + listOfFiles[i];
-        cout << listOfFiles[i] << endl;
-        igl::read_triangle_mesh(filepath, V, F);
-        V.transposeInPlace();
-        S.row(i) = Eigen::Map<Eigen::RowVectorXd>(V.data(), V.size());
-        V.resize(0,3);
-    }
+void reshape(Eigen::VectorXd flat, int rows, int cols, Eigen::MatrixXd &matrix){
+	Eigen::Map<Eigen::MatrixXd> M(flat.data(), cols, rows);
+	matrix = Eigen::MatrixXd(M.transpose());
 }
-
-void compute_pca(string dirPath, int m, Eigen::VectorXd& mX, Eigen::MatrixXd& E, Eigen::VectorXd& EV)
-{
-    int n, d;
-    Eigen::MatrixXd X, X_centered, L; // nxd
-    load_faces(dirPath, X);
-
-    n = X.rows();
-    d = X.cols();
-    mX = X.colwise().mean();
-    if(n < m){
-        cout << "Not enough faces in database or choose smaller m, n = "<< n << ", m = "<<m<<endl;
-        m = n;
-    }
-        
-    X_centered = X.rowwise() - mX.transpose();
-    // Want eigenvectors u of X^T*X in dxd --> to big
-    // Instead compute eigenvectors v of X*X^T, with u = X^T*v
-    L = X_centered * X_centered.adjoint();
-    Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> eigen(L);
-    auto v = eigen.eigenvectors();
-
-    //find eigenvectors with the m biggest eigenvalues
-    Eigen::MatrixXd u = X.adjoint() * v; 
-    // return m last eigenvectors, since they are sorted by increasing eigenvalues
-    E = u.block(0, n - m, d, m); //dxm matrix of eigenvectors (in cols)
-    //TODO: Also save eigenvalues?
-    EV = eigen.eigenvalues().segment(n - m, m);
-}   

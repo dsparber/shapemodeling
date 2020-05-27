@@ -1,4 +1,5 @@
 #include "pca.h"
+#include "common.h"
 
 PCA::PCA(int m_, string data_path_, string write_path_, bool small)
     :m(m_), data_path(data_path_), write_path(write_path_)
@@ -23,29 +24,6 @@ void PCA::load_template(){
 void PCA::get_template(Eigen::MatrixXd &V_ext, Eigen::MatrixXi &F_ext){
     V_ext = V_template;
     F_ext = F_template;
-}
-
-bool PCA::hasSuffix(const string& s, const string& suffix)
-{
-    return (s.size() >= suffix.size()) && equal(suffix.rbegin(), suffix.rend(), s.rbegin());    
-}
-
-
-void PCA::findFilesWithExt(const string &dirPath, const string &ext, vector<string> &listOfFiles)
-{
-    listOfFiles.clear();
-    DIR *dir = opendir(dirPath.c_str());
-    if(!dir){
-        cout << "Not a directory: "<< dirPath << endl;
-    }
-
-    dirent *entry;
-    while((entry = readdir(dir))!= NULL){
-        if(hasSuffix(entry->d_name, ext)){
-            listOfFiles.push_back(string(entry->d_name));
-        }
-    }
-    closedir(dir);
 }
 
 void PCA::load_faces(){
@@ -95,18 +73,11 @@ void PCA::morph_face(const vector<double> &slider){
 		weights(i) = slider[i];
 	}
 
-	if(weights.nonZeros() != 0){
-        weights.normalize();
-    }else{
-        cout << "weights all zero" << endl;
-    }
-		
-    
-    face = mF + eigenvectors * weights;
-    reshape(face.transpose(), face.size()/3, 3, V);
-}
+    if(weights.hasNaN()){
+        weights = Eigen::VectorXd::Zero(m);
+    }    
 
-void PCA::reshape(Eigen::VectorXd flat, int rows, int cols, Eigen::MatrixXd &matrix){
-	Eigen::Map<Eigen::MatrixXd> M(flat.data(), cols, rows);
-	matrix = Eigen::MatrixXd(M.transpose());
+    face = mF + eigenvectors * weights;
+
+    reshape(face.transpose(), face.size()/3, 3, V);
 }
