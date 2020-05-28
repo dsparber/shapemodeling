@@ -18,7 +18,7 @@
 1) We use an iterative method to warp the template to the scan.
 2) We update the template vertices through an energy minimization procedure. We use the following energy:
 
-<img src="https://latex.codecogs.com/svg.latex?E_{warp} = ||Lx' - Lx||^2 + \lambda||\operatorname{Id}_{constr} x' - c||^2" />
+<img src="https://latex.codecogs.com/svg.latex?E_{warp}=||Lx'-Lx||^2+\lambda||\operatorname{Id}_{constr}x'-c||^2" />
 
 where:
 * x : current template vertices.
