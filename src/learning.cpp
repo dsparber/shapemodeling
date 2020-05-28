@@ -146,7 +146,7 @@ void LearningManager::callback_draw_viewer_menu() {
 
     if (ImGui::CollapsingHeader("Advanced Setting", ImGuiTreeNodeFlags_None)) {
 
-        const float textWidth = 100.0f;
+        const float textWidth = -60.0f * SCREEN_SCALE;
 
         ImGui::PushItemWidth(textWidth);
         ImGui::InputText("Directory##Learning", learningDirectory);

@@ -69,9 +69,11 @@ void LandmarkManager::callback_draw_viewer_menu() {
 
     if (ImGui::CollapsingHeader("Load/Save", ImGuiTreeNodeFlags_DefaultOpen)) {
 
-        ImGui::PushItemWidth(-40);
-        ImGui::PushID("Input File##Landmark");
+        float w = ImGui::GetContentRegionAvailWidth();
+        float p = ImGui::GetStyle().FramePadding.x;
 
+        ImGui::PushItemWidth(-0.25f * (w - p));
+        ImGui::PushID("Input File##Landmark");
         ImGui::InputText("", inputFile);
         ImGui::PopID();
         ImGui::PopItemWidth();
@@ -83,7 +85,7 @@ void LandmarkManager::callback_draw_viewer_menu() {
             std::cout << "Loaded landmarks from " << inputFile << std::endl;
         }
 
-        ImGui::PushItemWidth(-40);
+        ImGui::PushItemWidth(-0.25f * (w - p));
         ImGui::PushID("Output File##Landmark");
         ImGui::InputText("", outputFile);
         ImGui::PopID();

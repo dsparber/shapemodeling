@@ -25,13 +25,15 @@ void FaceAlignmentManager::callback_draw_viewer_menu() {
     ImGui::SetNextWindowSize(ImVec2(200.0f, 600.0f), ImGuiSetCond_FirstUseEver);
     ImGui::Begin("Face Alignment", nullptr);
     
+    const float labelWidth = -90.0f * SCREEN_SCALE;
+
     if (ImGui::CollapsingHeader("Rigid Registration", ImGuiTreeNodeFlags_DefaultOpen)) {
         
-        ImGui::PushItemWidth(-90.0f);
+        ImGui::PushItemWidth(labelWidth);
         ImGui::InputText("Temp. mesh##FaceAlignment", path_template);
         ImGui::PopItemWidth();
 
-        ImGui::PushItemWidth(-90.0f);
+        ImGui::PushItemWidth(labelWidth);
         ImGui::InputText("Temp. landmarks##FaceAlignment", path_landmarks_template);
         ImGui::PopItemWidth();
 
@@ -66,21 +68,21 @@ void FaceAlignmentManager::callback_draw_viewer_menu() {
 
     if (ImGui::CollapsingHeader("Warping", ImGuiTreeNodeFlags_DefaultOpen)) {
         
-        ImGui::PushItemWidth(-90.0f);
+        ImGui::PushItemWidth(labelWidth);
         if (ImGui::InputDouble("Lambda##FaceAlignment", &lambda, 0.0, 0.0, "%.4lf")) {
             // Setting lambda to be positive
             lambda = std::abs(lambda);
         }
         ImGui::PopItemWidth();
 
-        ImGui::PushItemWidth(-90.0f);
+        ImGui::PushItemWidth(labelWidth);
         if (ImGui::InputInt("Iterations##FaceAlignment", &iterations)) {
             // Setting iterations to zero if user input is negative
             iterations = std::max(0, iterations);
         }
         ImGui::PopItemWidth();
 
-        ImGui::PushItemWidth(-90.0f);
+        ImGui::PushItemWidth(labelWidth);
         if (ImGui::InputDouble("Dist. threshold##FaceAlignment", &relative_distance_threshold, 0.0, 0.0, "%.4lf")) {
             // Setting relative distance to be positive
             relative_distance_threshold = std::abs(relative_distance_threshold);
@@ -93,7 +95,10 @@ void FaceAlignmentManager::callback_draw_viewer_menu() {
             warp();
         }
 
-        ImGui::PushItemWidth(-40);
+        float w = ImGui::GetContentRegionAvailWidth();
+        float p = ImGui::GetStyle().FramePadding.x;
+
+        ImGui::PushItemWidth(-0.25f * (w - p));
         ImGui::PushID("Result Path##FaceAlignment");
         ImGui::InputText("", result_path);
         ImGui::PopID();
