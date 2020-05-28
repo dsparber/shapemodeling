@@ -6,16 +6,12 @@
 
 /*** insert any necessary libigl headers here ***/
 #include <math.h> 
-#ifndef _WIN32
-#include <unistd.h>
-#endif
 
 #include <string>
 #include <sstream>
+#include <memory>
 
-using namespace std;
-
-std::string pythonCommand = "cd ../learning && python decode.py";
+#include "../src/learning.h"
 
 using Viewer = igl::opengl::glfw::Viewer;
 
@@ -27,88 +23,63 @@ Eigen::MatrixXd V;
 Eigen::MatrixXi F;
 // normals
 Eigen::MatrixXd N;
-// eigenvectors
-Eigen::MatrixXd  W;
+
 // mean face
 Eigen::VectorXd F_m;
 // place holder
 Eigen::MatrixXd V_new;
 
-bool exampleBool = false;
-int exampleInt = 2;
-
-int LATENT_DIMENSION = 10;
-vector<float> slider_weights;
+// Unique pointer to learning manager
+std::unique_ptr<LearningManager> learningManager;
 
 // ************************Function Declaration ************************ //
 bool callback_key_pressed(Viewer &viewer, unsigned char key, int modifiers);
-bool load_mesh(string filename);
-bool set_V(Eigen::MatrixXd &Vnew);
-void reshape(Eigen::VectorXd flat, int rows, int cols, Eigen::MatrixXd &matrix);
-// ******************************************************************** //
+bool load_mesh(const std::string &filename);
+// ********************************************************************* //
 
 
-void reshape(Eigen::VectorXd flat, int rows, int cols, Eigen::MatrixXd &matrix){
-	Eigen::Map<Eigen::MatrixXd> M(flat.data(), cols, rows);
-	matrix = Eigen::MatrixXd(M.transpose());
-}
+bool callback_key_pressed(Viewer &viewer, unsigned char key, int modifier){
 
-bool callback_key_pressed(Viewer &viewer, unsigned char key, int modifiers){
 	switch (key) {
 		case '1':
 			break;
-		case '2' :
+		case '2':
 			break;
 		case '3':
 			break;
 		case '4':
 			break;
-		case 'R':
-		    // Reset weights
-			for(auto &e : slider_weights){
-				e = 0.0f;
-			}
-			break;	
+	}
+
+	// Passing on key pressed event to learning manager
+	learningManager->callback_key_pressed(viewer, key, modifier);
+	// Checking if learning manager tells main to update mesh
+	if (learningManager->updateMesh) {
+		// Loading new mesh created with learning python script
+		load_mesh(learningManager->outputMesh);
+		// Resetting mesh update flag of learning manager 
+		learningManager->updateMesh = false;
 	}
 
 	return true;
+
 }
 
-bool load_mesh(string filename){
+bool load_mesh(const std::string &filename){
+	
 	igl::read_triangle_mesh(filename,V,F);
 	viewer.data().clear();
 	viewer.data().set_mesh(V, F);
 	viewer.core.align_camera_center(V);
 
 	return true;
-}
 
-bool set_V(Eigen::MatrixXd &Vnew){
-	V = Vnew;
-	viewer.data().clear();
-	viewer.data().set_mesh(V, F);
-	viewer.core.align_camera_center(V);
-	return true;
 }
 
 int main(int argc,char *argv[]){
 
-#ifndef _WIN32
-	int opt;
-	while((opt = getopt(argc, argv, "m:")) != -1){
-		switch(opt){
-			case 'm':
-				LATENT_DIMENSION = atoi(optarg);
-				break;
-		}
-	}
-#endif
-	// set weights to zero
-	slider_weights = vector<float>(LATENT_DIMENSION, 0);
-	//set F from a template file
-	//igl::read_triangle_mesh(templatePath, V, F);
-	//reshape(F_m, F_m.size()/3, 3, V_new);
-	//set_V(V_new);
+	// Initialize larning manager
+	learningManager = std::unique_ptr<LearningManager>(new LearningManager(viewer));
 
 	igl::opengl::glfw::imgui::ImGuiMenu menu;
 	viewer.plugins.push_back(&menu);
@@ -118,29 +89,21 @@ int main(int argc,char *argv[]){
 		// Draw parent menu content
 		menu.draw_viewer_menu();
 
-		if (ImGui::CollapsingHeader("Parameters", ImGuiTreeNodeFlags_DefaultOpen))
-		{
-			for(int i = 0; i < LATENT_DIMENSION; i++){
-				string weight_name = "Latent " + to_string(i);
-				ImGui::SliderFloat(weight_name.c_str(), &(slider_weights[i]), -100, 100);
-			}
-
-            if (ImGui::Button("Run")) {
-                
-				std::stringstream command;
-				command << pythonCommand;
-				for (float w : slider_weights) {
-					command << " " << w;
-				}
-
-				system(command.str().c_str());
-
-                load_mesh("../learning/learning_out.obj");
-
-            }
+		// Drawing custom learning window menu
+		learningManager->callback_draw_viewer_menu();
+		// Checking if learning manager tells main to update mesh
+		if (learningManager->updateMesh) {
+			// Loading new mesh created with learning python script
+			load_mesh(learningManager->outputMesh);
+			// Resetting mesh update flag of learning manager 
+			learningManager->updateMesh = false;
 		}
+
 	};
 
 	viewer.callback_key_pressed = callback_key_pressed;
 	viewer.launch();
+
+	return 0;
+
 }
