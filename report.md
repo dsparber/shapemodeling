@@ -24,7 +24,7 @@ where:
 * x : current template vertices.
 * x' : new template vertices to be computed.
 * c : constraints.
-* lambda : hyperparameter that controls the relative weighting of smoothing term and constraints term.
+* <img src="https://latex.codecogs.com/svg.latex?\lambda" /> : hyperparameter that controls the relative weighting of smoothing term and constraints term.
 
 We experimented with different constraints, such as template boundary, scan landmarks and scan points far less than a user defined threshold from the scan. In the end, we only kept the template boundary and points far less than some threshold as constraints.
 
@@ -38,13 +38,15 @@ We experimented with different constraints, such as template boundary, scan land
 
 ## Learning
 
-### General
+### Overview
 - Implemented with PyTorch
 - Generating test data: warping script and PCA based generator 
 - Tried COMA and PointNet
 - Implemented our own approach, inspired by PointNet
 - Integrated into pipeline to visualize
-  - Interactive sliders to tweak latents and morph faces
+  - Custom faces: Interactive sliders to tweak latents
+  - Morph faces: linearly interpolate latents
+  - Random faces: Generate random latents and reconstruct from there
 
 ### Our Model
 
