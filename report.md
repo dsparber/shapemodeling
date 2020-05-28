@@ -36,7 +36,11 @@ where:
 
 We experimented with different constraints, such as template boundary, scan landmarks and scan points far less than a user defined threshold from the scan. In the end, we only kept the template boundary and points far less than some threshold as constraints.
 
+* template and target scan.
+
 ![warping](screenshots/warp1.png)
+
+* template and warping results after 1 and 5 iterations.
 
 ![warping](screenshots/warp2.png)
 
