@@ -1,4 +1,5 @@
 #include <igl/read_triangle_mesh.h>
+#include <igl/write_triangle_mesh.h>
 #include <igl/opengl/glfw/Viewer.h>
 #include <igl/opengl/glfw/imgui/ImGuiMenu.h>
 #include <igl/opengl/glfw/imgui/ImGuiHelpers.h>
@@ -63,6 +64,9 @@ enum PipelineMode {
 enum PipelineMode pipelineMode = LANDMARK_MODE;
 
 
+std::string inputFile = "../data/demo/tmpMesh.obj";
+std::string outputFile = "../data/demo/tmpMesh.obj";
+
 // ************************Function Declaration ************************ //
 bool callback_mouse_move(Viewer &viewer, int mouse_x, int mouse_y);
 bool callback_mouse_down(Viewer &viewer, int button, int modifier);
@@ -71,6 +75,7 @@ bool callback_pre_draw(Viewer &viewer);
 bool callback_init(Viewer &viewer);
 bool load_mesh(const std::string &filename);
 bool load_mesh(const Eigen::MatrixXd &V, const Eigen::MatrixXi &F);
+bool save_mesh(const std::string &filename);
 // ******************************************************************** //
 
 
@@ -184,7 +189,10 @@ bool callback_init(Viewer &viewer) {
 bool load_mesh(const std::string &filename) {
 
 	// Reading triangle from file (multiple mesh types possible)
-	igl::read_triangle_mesh(filename, V, F);
+	bool success = igl::read_triangle_mesh(filename, V, F);
+	if (!success) {
+		std::cerr << "Could not read mesh " << filename << std::endl;
+	}
 
 	// Clearing viewer data, setting mesh and aligning camera
 	viewer.data().clear();
@@ -207,6 +215,18 @@ bool load_mesh(const Eigen::MatrixXd &V, const Eigen::MatrixXi &F) {
 
 	// Initializing landmark manager
 	landmarkManager = std::unique_ptr<LandmarkManager>(new LandmarkManager(V, F, viewer));
+
+	return true;
+
+}
+
+bool save_mesh(const std::string &filename) {
+
+	// Writing mesh from viewer to file
+	bool success = igl::write_triangle_mesh(filename, viewer.data().V, viewer.data().F);
+	if (!success) {
+		std::cerr << "Could not write mesh " << filename << std::endl;
+	}
 
 	return true;
 
@@ -259,7 +279,7 @@ int main(int argc,char *argv[]) {
 		// Useful to check ImGui stuff
 		//ImGui::ShowDemoWindow();
 
-		if (ImGui::CollapsingHeader("Parameters", ImGuiTreeNodeFlags_DefaultOpen)) {
+		if (ImGui::CollapsingHeader("Assignment 6", ImGuiTreeNodeFlags_DefaultOpen)) {
 
 			const char* mode[] = {"Landmark", "Face Alignment", "PCA", "Learning"};
             int index = pipelineMode;
@@ -267,7 +287,34 @@ int main(int argc,char *argv[]) {
                 // Updating pipeline mode
                 pipelineMode = static_cast<enum PipelineMode>(index);
             }
-						
+
+			float w = ImGui::GetContentRegionAvailWidth();
+			float p = ImGui::GetStyle().FramePadding.x;
+
+			ImGui::PushItemWidth(-0.25f * (w - p));
+			ImGui::PushID("Input File##Main");
+			ImGui::InputText("", inputFile);
+			ImGui::PopID();
+			ImGui::PopItemWidth();
+
+			ImGui::SameLine();
+			if (ImGui::Button("Load##Main", ImVec2(-1.0f, 0.0f))) {
+				// Reloading mesh
+				load_mesh(inputFile);
+			}
+
+			ImGui::PushItemWidth(-0.25f * (w - p));
+			ImGui::PushID("Output File##Main");
+			ImGui::InputText("", outputFile);
+			ImGui::PopID();
+			ImGui::PopItemWidth();
+
+			ImGui::SameLine();
+			if (ImGui::Button("Save##Main", ImVec2(-1.0f, 0.0f))) {
+				// Saving mesh
+				save_mesh(outputFile);
+			}
+
 		}
 
 		if (pipelineMode == LANDMARK_MODE) {

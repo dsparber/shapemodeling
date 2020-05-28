@@ -21,11 +21,11 @@ FaceAlignmentManager::~FaceAlignmentManager() {
 
 void FaceAlignmentManager::callback_draw_viewer_menu() {
     
-    ImGui::SetNextWindowPos(ImVec2(180.0f * SCREEN_SCALE, 0.0f), ImGuiSetCond_FirstUseEver);
-    ImGui::SetNextWindowSize(ImVec2(200.0f * SCREEN_SCALE, 600.0f * SCREEN_SCALE), ImGuiSetCond_FirstUseEver);
+    ImGui::SetNextWindowPos(ImVec2(180.0f * SCREEN_SCALE_X, 0.0f), ImGuiSetCond_FirstUseEver);
+    ImGui::SetNextWindowSize(DEFAULT_WINDOW_SIZE, ImGuiSetCond_FirstUseEver);
     ImGui::Begin("Face Alignment", nullptr);
     
-    const float labelWidth = -90.0f * SCREEN_SCALE;
+    const float labelWidth = -90.0f * SCREEN_SCALE_X;
 
     if (ImGui::CollapsingHeader("Rigid Registration", ImGuiTreeNodeFlags_DefaultOpen)) {
         

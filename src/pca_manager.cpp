@@ -52,25 +52,14 @@ PCAManager::~PCAManager(){/* empty? */}
 void PCAManager::callback_draw_viewer_menu()
 {
 
-    ImGui::SetNextWindowSize(ImVec2(300.0f, 600.0f), ImGuiSetCond_FirstUseEver);
-    ImGui::SetNextWindowPos(ImVec2(180.0f * SCREEN_SCALE, 0.0f), ImGuiSetCond_FirstUseEver);
+    ImGui::SetNextWindowPos(ImVec2(180.0f * SCREEN_SCALE_X, 0.0f), ImGuiSetCond_FirstUseEver);
+    ImGui::SetNextWindowSize(DEFAULT_WINDOW_SIZE, ImGuiSetCond_FirstUseEver);
     ImGui::Begin("PCA", nullptr);
-
-    if(ImGui::CollapsingHeader("Write to File", ImGuiTreeNodeFlags_DefaultOpen)){
-        ImGui::InputText("File name", write_file);
-        if(ImGui::Button("Write to File")){
-            string full_write_path = write_path + write_file;
-            bool success = igl::writeOBJ(full_write_path, this->V, this->F);
-            if(success){
-                cout << "Written to " << full_write_path << endl;
-            }
-        }
-    }
 
     if (ImGui::CollapsingHeader("Eigenfaces", ImGuiTreeNodeFlags_DefaultOpen))
     {
         for(int i = 0; i < m; i++){
-            string slider_name = "Eigenvector " + to_string(i + 1);
+            string slider_name = "EV " + to_string(i + 1);
             if(ImGui::SliderScalar(slider_name.c_str(), ImGuiDataType_Double, &(slider[m-(i+1)]), &mone, &one)){
                 this->draw = true;
             }
@@ -78,33 +67,41 @@ void PCAManager::callback_draw_viewer_menu()
         if(this->draw){
             eigenface(weight_factor * slider.array() * eigenvalues.array(), base);
         }
-        ImGui::InputDouble("weight factor", &weight_factor);
+        
+        if(ImGui::InputDouble("Scale##PCA", &weight_factor)){
+            weight_factor = std::abs(weight_factor);
+        }
 
-        if(ImGui::Button("Reset weights")){
+        ImGui::SliderScalar("Std. Dev.##PCA", ImGuiDataType_Double, &random_variance, &zero, &max_random_variance);
+
+        float w = ImGui::GetContentRegionAvailWidth();
+        float p = ImGui::GetStyle().FramePadding.x;
+
+        if(ImGui::Button("Randomize##PCA", ImVec2(0.5f * (w-p), 0.0f))){
+            random_face();
+            this->draw = true;	
+        }
+
+        ImGui::SameLine(0.0f, p);
+
+        if(ImGui::Button("Reset##PCA",  ImVec2(0.5f * (w-p), 0.0f))){
             slider = Eigen::VectorXd::Zero(m);
             eigenface(slider, base);
             this->draw = true;		
         }
 
-        if (ImGui::Button("Choose Base"))
-        {
+        if(ImGui::Button("Choose Base##PCA", ImVec2(-1.0f, 0.0f))){
             string filename = igl::file_dialog_open();
             read_face(filename, base);
             igl::read_triangle_mesh(filename, this->V, this->F);
             this->draw = true;
         }
         
-        if (ImGui::Button("Reconstruct Base"))
-        {
+        if(ImGui::Button("Reconstruct Base##PCA", ImVec2(-1.0f, 0.0f))){
             reconstruct(base);
             this->draw = true;
         }
 
-    }
-
-    if (ImGui::CollapsingHeader("Random Face Generator", ImGuiTreeNodeFlags_DefaultOpen))
-    {
-        ImGui::SliderScalar("Random Variance", ImGuiDataType_Double, &random_variance, &zero, &max_random_variance);
     }
 
     if (ImGui::CollapsingHeader("Face Morphing", ImGuiTreeNodeFlags_DefaultOpen))
@@ -112,21 +109,44 @@ void PCAManager::callback_draw_viewer_menu()
 
         float w = ImGui::GetContentRegionAvailWidth();
         float p = ImGui::GetStyle().FramePadding.x;
-        if (ImGui::Button("Face 1", ImVec2((w-p)/2.0f, 0)))
-        {
+
+        ImGui::PushItemWidth(-0.25f * (w - p));
+        ImGui::PushID("Face 1 Text Path##PCA");
+        ImGui::InputText("", f1_path);
+        ImGui::PopID();
+        ImGui::PopItemWidth();
+
+        ImGui::SameLine();
+
+        if (ImGui::Button("Face 1##PCA", ImVec2(-1.0f, 0.0f))){
             f1_path = igl::file_dialog_open();
-            read_face(f1_path, f1);
-            compute_weights(f1, w1);
+            if (f1_path.length() > 0) {
+                read_face(f1_path, f1);
+                compute_weights(f1, w1);
+            } else {
+                std::cout << "The provided path was empty, please repeat." << std::endl;
+            }
         }
 
-        if (ImGui::Button("Face 2", ImVec2((w-p)/2.0f, 0)))
-        {
+        ImGui::PushItemWidth(-0.25f * (w - p));
+        ImGui::PushID("Face 2 Text Path##PCA");
+        ImGui::InputText("", f2_path);
+        ImGui::PopID();
+        ImGui::PopItemWidth();
+
+        ImGui::SameLine();
+
+        if (ImGui::Button("Face 2##PCA", ImVec2(-1.0f, 0.0f))){
             f2_path = igl::file_dialog_open();
-            read_face(f2_path, f2);
-            compute_weights(f2, w2);
+            if (f2_path.length() > 0) {
+                read_face(f2_path, f2);
+                compute_weights(f2, w2);
+            } else {
+                std::cout << "The provided path was empty, please repeat." << std::endl;
+            }
         }
 
-        if(ImGui::SliderScalar("p", ImGuiDataType_Double, &p12, &zero, &one)){
+        if(ImGui::SliderScalar("Morph##PCA", ImGuiDataType_Double, &p12, &zero, &one)){
             morphface();
             this->draw = true;
         }
@@ -135,8 +155,7 @@ void PCAManager::callback_draw_viewer_menu()
     
     if (ImGui::CollapsingHeader("Expression Changer", ImGuiTreeNodeFlags_DefaultOpen))
     {
-        if (ImGui::SliderScalar("Expression", ImGuiDataType_Double, &p_exp, &mone, &one))
-        {
+        if (ImGui::SliderScalar("Expression##PCA", ImGuiDataType_Double, &p_exp, &mone, &one)){
             change_expression(p_exp, base);
             this->draw = true;
         }

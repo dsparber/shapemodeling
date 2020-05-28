@@ -28,14 +28,44 @@ LearningManager::~LearningManager() {
 
 void LearningManager::callback_draw_viewer_menu() {
 
-    ImGui::SetNextWindowPos(ImVec2(180.0f * SCREEN_SCALE, 0.0f), ImGuiSetCond_FirstUseEver);
-    ImGui::SetNextWindowSize(ImVec2(200.0f, 600.0f), ImGuiSetCond_FirstUseEver);
+    ImGui::SetNextWindowPos(ImVec2(180.0f * SCREEN_SCALE_X, 0.0f), ImGuiSetCond_FirstUseEver);
+    ImGui::SetNextWindowSize(DEFAULT_WINDOW_SIZE, ImGuiSetCond_FirstUseEver);
     ImGui::Begin("Learning Window", nullptr);
 
     if (ImGui::CollapsingHeader("Morphing", ImGuiTreeNodeFlags_DefaultOpen)) {
 
-        ImGui::InputText("Face 1##Learning", morphFace1);
-        ImGui::InputText("Face 2##Learning", morphFace2);
+        float w = ImGui::GetContentRegionAvailWidth();
+        float p = ImGui::GetStyle().FramePadding.x;
+
+        ImGui::PushItemWidth(-0.25f * (w - p));
+        ImGui::PushID("Face 1 Text Path##Learning");
+        ImGui::InputText("", morphFace1);
+        ImGui::PopID();
+        ImGui::PopItemWidth();
+
+        ImGui::SameLine();
+
+        if (ImGui::Button("Face 1##PCA", ImVec2(-1.0f, 0.0f))) {
+            morphFace1 = igl::file_dialog_open();
+            if (morphFace1.length() <= 0) {
+                std::cout << "The provided path was empty, please repeat." << std::endl;
+            }
+        }
+
+        ImGui::PushItemWidth(-0.25f * (w - p));
+        ImGui::PushID("Face 2 Text Path##Learning");
+        ImGui::InputText("", morphFace2);
+        ImGui::PopID();
+        ImGui::PopItemWidth();
+
+        ImGui::SameLine();
+
+        if (ImGui::Button("Face 2##PCA", ImVec2(-1.0f, 0.0f))) {
+            morphFace2 = igl::file_dialog_open();
+            if (morphFace2.length() <= 0) {
+                std::cout << "The provided path was empty, please repeat." << std::endl;
+            }
+        }
 
         bool dirty = false;
 
@@ -72,8 +102,8 @@ void LearningManager::callback_draw_viewer_menu() {
 
     if (ImGui::CollapsingHeader("Latent Weights", ImGuiTreeNodeFlags_DefaultOpen)) {
         
-        static float sliderMin = -8.f;
-        static float sliderMax = 8.f;
+        static float sliderMin = -8.0f;
+        static float sliderMax = 8.0f;
 
         float sliderMinMax[] = {sliderMin, sliderMax};
         if (ImGui::InputFloat2("Min/Max##Learning", sliderMinMax, "%.1f")) {
@@ -146,7 +176,7 @@ void LearningManager::callback_draw_viewer_menu() {
 
     if (ImGui::CollapsingHeader("Advanced Setting", ImGuiTreeNodeFlags_None)) {
 
-        const float textWidth = -60.0f * SCREEN_SCALE;
+        const float textWidth = -60.0f * SCREEN_SCALE_X;
 
         ImGui::PushItemWidth(textWidth);
         ImGui::InputText("Directory##Learning", learningDirectory);

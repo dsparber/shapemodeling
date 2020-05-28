@@ -96,8 +96,6 @@ private:
 
     string data_path = "../data/pca/small/default"; 
     string data_path_selection = data_path;
-    string write_path = "../";
-    string write_file = "default.obj";
     string template_path;
     const string s_template_path = "../data/face_template/template_small.obj";
     const string l_template_path = "../data/face_template/template.obj";

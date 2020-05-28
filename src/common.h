@@ -16,7 +16,12 @@
 #include <dirent.h>
 #endif
 
-#define SCREEN_SCALE 1.5f
+#include <imgui/imgui.h>
+
+#define SCREEN_SCALE_X 2.0f
+#define SCREEN_SCALE_Y 1.5f
+
+#define DEFAULT_WINDOW_SIZE ImVec2(200.0f * SCREEN_SCALE_X, 600.0f * SCREEN_SCALE_Y)
 
 using namespace std;
 
