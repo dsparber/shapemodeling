@@ -20,9 +20,26 @@ bool s = true;
 // Unique pointer to pca manager
 std::unique_ptr<PCAManager> pcaManager;
 
+bool load_mesh(const Eigen::MatrixXd &V, const Eigen::MatrixXi &F) {
+
+	// Clearing viewer data, setting mesh and aligning camera
+	viewer.data().clear();
+	viewer.data().set_mesh(V, F);
+	viewer.core.align_camera_center(V);
+	return true;
+
+}
+
+
 bool callback_key_pressed(Viewer &viewer, unsigned char key, int modifier){
     pcaManager->callback_key_pressed(viewer, key, modifier);
+    if(pcaManager->draw){
+        load_mesh(pcaManager->V, pcaManager->F);
+    }
 }
+
+
+
 int main(int argc, char *argv[])
 {
 #ifndef _WIN32
@@ -45,7 +62,6 @@ int main(int argc, char *argv[])
 
 	// Initialize PCA manager
 	pcaManager = std::unique_ptr<PCAManager>(new PCAManager(viewer, s, data_path, m));
-
 	igl::opengl::glfw::imgui::ImGuiMenu menu;
 	viewer.plugins.push_back(&menu);
 
@@ -53,8 +69,11 @@ int main(int argc, char *argv[])
        	// Draw parent menu content
 		menu.draw_viewer_menu(); 
         pcaManager->callback_draw_viewer_menu();
+        if(pcaManager->draw){
+            load_mesh(pcaManager->V, pcaManager->F);
+        }
     };
     viewer.callback_key_pressed = callback_key_pressed;
-
+    viewer.launch();
     return 0;
 }
