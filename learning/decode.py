@@ -14,7 +14,7 @@ saved_model = 'model_high_res.pt' if high_res else 'model.pt'
 model = PointNetAutoencoder(n)
 model.load_state_dict(torch.load(saved_model))
 
-data_path = '../data/warped_meshes_high_res/'
+data_path = '../data/warped_meshes_high_res/' if high_res else '../data/warped_meshes/'
 template = glob.glob(os.path.join(data_path, "*.obj"))[0]
 _, f = load_obj(template)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

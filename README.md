@@ -1,6 +1,14 @@
 # Shape modeling
 ## Assignment 6
 
+### Resources 
+
+- [Our Presentation](https://docs.google.com/presentation/d/1DIcviOEhOQk6m5dT0ryPQ2L86IimTuuQazykyQr2f8I/edit?usp=sharing)
+
+- [Our meshes (polybox)](https://polybox.ethz.ch/index.php/s/TjBI4GNID1qZCtm?path=%2F)
+
+- [Files, shared with all teams (polybox)](https://polybox.ethz.ch/index.php/s/ZfYXXfV5SR4sQoB)  (PW: eigenfaces)
+
 ### Group Members
 
 | Legi Number | First Name | Last Name       | Email            | Github Username |
@@ -13,44 +21,29 @@
 
 ### Work distribution
 
-- Project lead: Daniel
-- Landmark selection: Sebastian
-- Face alignment: Camilla (rigid), Jela (warping)
-- PCA: Viviane
-- Bonus: Daniel + whoever is finshed
+- Camilla: Preprocessing, Rigid Alignment
+- Daniel: Project Lead, Learning Based Approach (bonus)
+- Jela: Warping
+- Sebastian: Landmark Selection, User Interface
+- Viviane: PCA
 
-
-### TODO
-
-- [x] Viviane: Add template to repository
-- [x] Viviane: add data
-
-
-### Meetings
+### Group Meetings
 
 - 09.05.2020, 14:00
 - 20.05.2020, 11:20
 - 26.05.2020, 10:00
+- 28.05.2020, 10:00
 
 ### Project Structure
 
-├── build/  
-├── cmake  
-│   └── FindLIBIGL.cmake  
-├── CMakeLists.txt  
-├── data/  
-├── libigl/  
-├── README.md  
-├── src  
-│   ├── main.cpp  
-│   ├── example.cpp  
-│   └── example.h  
-└── test  
-    └── example_main.cpp  
+`src/main.cpp` is the entry point for an application containing all pipline steps
+
+`test/` contains main files for every pipline step individually
+
+`learning/` contains the learning based approach (PyTorch)
 
 
-
-### Wiki
+### How To
 
 #### Cloning the repository
 
@@ -72,10 +65,3 @@ make -j2
 3. Add an executable for your step in CMakeLists.txt
 4. After testing, add your files and functions in the pipeline main.cpp
 
-### Important Links
-
-#### Polybox shared with all teams
-[Polybox](https://polybox.ethz.ch/index.php/s/ZfYXXfV5SR4sQoB), PW: eigenfaces
-
-#### Presentation
-[Google docs presentation](https://docs.google.com/presentation/d/1DIcviOEhOQk6m5dT0ryPQ2L86IimTuuQazykyQr2f8I/edit?usp=sharing)
