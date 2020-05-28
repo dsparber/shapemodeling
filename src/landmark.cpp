@@ -106,7 +106,10 @@ void LandmarkManager::callback_draw_viewer_menu() {
 
             ImGui::Text("Please click:");
 
-            ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + 180.0f);
+            float w = ImGui::GetContentRegionAvailWidth();
+            float p = ImGui::GetStyle().FramePadding.x;
+
+            ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + (w-p));
             ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "%s", descriptions[current_landmark].c_str());
             ImGui::PopTextWrapPos();
 
