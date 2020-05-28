@@ -1,45 +1,54 @@
 import torch
 import torch.nn as nn
-from .fully_connected import FullyConnected
 
 class Autoencoder(nn.Module):
     def __init__(self, num_points):
         super(Autoencoder, self).__init__()
-        self.total_stride = 2 ** 3
         self.num_points = num_points
-        self.encoder = nn.Sequential(
-            nn.Conv1d(in_channels=3, out_channels=64, stride=2, kernel_size=5, padding=2),
+        self.point_net_encoder = nn.Sequential(
+            nn.Conv1d(in_channels=3, out_channels=64, stride=1, kernel_size=1),
             nn.BatchNorm1d(64),
             nn.ReLU(True),
-            nn.Conv1d(in_channels=64, out_channels=64, stride=2, kernel_size=5, padding=2),
+            nn.Conv1d(in_channels=64, out_channels=64, stride=1, kernel_size=1),
             nn.BatchNorm1d(64),
             nn.ReLU(True),
-            nn.Conv1d(in_channels=64, out_channels=64, stride=1, kernel_size=5, padding=2),
+            nn.Conv1d(in_channels=64, out_channels=64, stride=1, kernel_size=1),
             nn.BatchNorm1d(64),
             nn.ReLU(True),
-            nn.Conv1d(in_channels=64, out_channels=64, stride=1, kernel_size=5, padding=2),
-            nn.BatchNorm1d(64),
+            nn.Conv1d(in_channels=64, out_channels=128, stride=1, kernel_size=1),
+            nn.BatchNorm1d(128),
             nn.ReLU(True),
-            nn.Conv1d(in_channels=64, out_channels=32, stride=2, kernel_size=3, padding=1),
-            nn.BatchNorm1d(32),
+            nn.Conv1d(in_channels=128, out_channels=1024, stride=1, kernel_size=1),
+            nn.BatchNorm1d(1024),
             nn.ReLU(True),
+            nn.MaxPool1d(kernel_size=num_points)
         )
-        self.fully_connected = FullyConnected(input_dim=(32, (num_points + self.get_padding()) // self.total_stride), latent_dim=10)
+        self.fully_connected_encoder = nn.Sequential(
+            nn.Linear(in_features=1024, out_features=512),
+            nn.Dropout(p=0.3),
+            nn.ReLU(True),
+            nn.Linear(in_features=512, out_features=256),
+            nn.Dropout(p=0.3),
+            nn.ReLU(True),
+            nn.Linear(in_features=256, out_features=10),
+        )
         self.decoder = nn.Sequential(
-            nn.ConvTranspose1d(in_channels=32, out_channels=64, stride=2, kernel_size=3, padding=1, output_padding=1),
-            nn.BatchNorm1d(64),
+            nn.Linear(in_features=10, out_features=256),
+            nn.BatchNorm1d(256),
             nn.ReLU(True),
-            nn.ConvTranspose1d(in_channels=64, out_channels=64, stride=1, kernel_size=5, padding=2),
-            nn.BatchNorm1d(64),
+            nn.Linear(in_features=256, out_features=512),
+            nn.BatchNorm1d(512),
             nn.ReLU(True),
-            nn.ConvTranspose1d(in_channels=64, out_channels=64, stride=1, kernel_size=5, padding=2),
-            nn.BatchNorm1d(64),
+            nn.Linear(in_features=512, out_features=1024),
+            nn.BatchNorm1d(1024),
             nn.ReLU(True),
-            nn.ConvTranspose1d(in_channels=64, out_channels=64, stride=2, kernel_size=5, padding=2, output_padding=1),
-            nn.BatchNorm1d(64),
+            nn.Linear(in_features=1024, out_features=1024),
+            nn.BatchNorm1d(1024),
             nn.ReLU(True),
-            nn.ConvTranspose1d(in_channels=64, out_channels=3, stride=2, kernel_size=5, padding=2, output_padding=1),
-            nn.BatchNorm1d(3),
+            nn.Linear(in_features=1024, out_features=1024),
+            nn.BatchNorm1d(1024),
+            nn.ReLU(True),
+            nn.Linear(in_features=1024, out_features=num_points * 3),
         )
 
 
@@ -49,18 +58,16 @@ class Autoencoder(nn.Module):
         return x_hat
 
     def encode(self, x):
-        y = self.encoder(x)
-        z = self.fully_connected.encode(y)
+        y = self.point_net_encoder(x)
+        y = y.view(y.size(0), -1)
+        z = self.fully_connected_encoder(y)
         return z
 
     def decode(self, z):
-        y = self.fully_connected.decode(z)
-        x_hat = self.decoder(y)
+        x_hat = self.decoder(z)
+        x_hat = x_hat.view(x_hat.size(0), 3, self.num_points)
         return x_hat
 
     def stride(self):
         return self.total_stride
-
-    def get_padding(self):
-        return self.stride() - (self.num_points % self.stride())
 
