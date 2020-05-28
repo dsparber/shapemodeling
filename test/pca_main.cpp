@@ -39,11 +39,6 @@ Viewer viewer;
 std::shared_ptr<PCA> pca;
 double maxVar = 10;
 /////////////////////////////GUI////////////////////////////////////////
-bool callback_key_down(Viewer &viewer, unsigned char key, int modifiers);
-bool callback_mouse_down(Viewer &viewer, int button, int modifier);
-bool callback_mouse_move(Viewer &viewer, int mouse_x, int mouse_y);
-bool callback_mouse_up(Viewer &viewer, int button, int modifier);
-bool callback_pre_draw(Viewer &viewer);
 bool callback_key_pressed(Viewer &viewer, unsigned char key, int modifiers);
 bool draw_viewer_menu();
 bool reload();
@@ -161,24 +156,6 @@ bool draw_viewer_menu(){
     } 
 
 }
-bool callback_key_down(Viewer &viewer, unsigned char key, int modifiers){
-    return true;
-}
-
-bool callback_mouse_down(Viewer &viewer, int button, int modifier){
-
-    return true;
-}
-
-bool callback_mouse_move(Viewer &viewer, int mouse_x, int mouse_y){
-    return true;
-}
-
-bool callback_mouse_up(Viewer &viewer, int button, int modifier){
-    pca->eigenface(slider, base);
-    reload();
-    return true;
-}
 
 bool callback_key_pressed(Viewer &viewer, unsigned char key, int modifiers){
 	switch (key) {
@@ -241,11 +218,6 @@ int main(int argc,char *argv[]){
         // menu.draw_viewer_menu();
         draw_viewer_menu();
 	};
-
-    // viewer.callback_key_down = callback_key_down;
-    // viewer.callback_mouse_down = callback_mouse_down;
-    // viewer.callback_mouse_move = callback_mouse_move;
-    // viewer.callback_mouse_up = callback_mouse_up;
 	viewer.callback_key_pressed = callback_key_pressed;
 
 	viewer.launch();

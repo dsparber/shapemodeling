@@ -17,6 +17,7 @@ FILE(GLOB SRCFILES
 )
 
 list(REMOVE_ITEM SRCFILES ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp)
+
 message(***************${SRCFILES}*********************)
 
 

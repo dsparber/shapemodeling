@@ -8,11 +8,12 @@
 #include <string>
 #include <memory>
 #include <math.h> 
-
+#include <string>
 #include "common.h"
 #include "landmark.h"
 #include "face_alignment.h"
 #include "learning.h"
+#include "pca_manager.h"
 
 using namespace std;
 using namespace Eigen;
@@ -20,6 +21,11 @@ using namespace Eigen;
 using Viewer = igl::opengl::glfw::Viewer;
 
 Viewer viewer;
+
+// inputs for PCA
+int m = 10;
+string data_path = "../data/aligned_faces_example/default";
+bool s = true;
 
 // vertex array, #V x3
 Eigen::MatrixXd V;
@@ -32,9 +38,11 @@ std::unique_ptr<LandmarkManager> landmarkManager;
 // Unique pointer to face alignment manager
 std::unique_ptr<FaceAlignmentManager> faceAlignmentManager;
 
+// Unique pointer to pca manager
+std::unique_ptr<PCAManager> pcaManager;
+
 // Unique pointer to learning manager
 std::unique_ptr<LearningManager> learningManager;
-
 
 // Pipeline mode for showing different window
 enum PipelineMode {
@@ -57,6 +65,7 @@ bool callback_key_pressed(Viewer &viewer, unsigned char key, int modifier);
 bool callback_pre_draw(Viewer &viewer);
 bool callback_init(Viewer &viewer);
 bool load_mesh(const std::string &filename);
+bool reload();
 // ******************************************************************** //
 
 
@@ -99,6 +108,16 @@ bool callback_key_pressed(Viewer &viewer, unsigned char key, int modifier) {
 	else if (pipelineMode == FACE_ALIGNMENT_MODE) {
 		// Passing on key pressed event to face alignment manager
 		faceAlignmentManager->callback_key_pressed(viewer, key, modifier);
+	}
+	else if (pipelineMode == PCA_MODE) {
+		// Passing on key pressed event to face alignment manager
+		pcaManager->callback_key_pressed(viewer, key, modifier);
+		if(pcaManager->draw){
+			V = pcaManager->V;
+			F = pcaManager->F;
+			reload();
+			pcaManager->draw = false;
+		}		
 	}
 	else if (pipelineMode == LEARNING_MODE) {
 		// Passing on key pressed event to learning manager
@@ -159,6 +178,13 @@ bool load_mesh(const std::string &filename) {
 
 }
 
+bool reload() {
+	viewer.data().clear();
+	viewer.data().set_mesh(V, F);
+	viewer.core.align_camera_center(V);
+	return true;
+}
+
 int main(int argc,char *argv[]) {
 
 	if (argc != 2) {
@@ -167,9 +193,27 @@ int main(int argc,char *argv[]) {
 	} else {
 		load_mesh(argv[1]);
 	}
+	
+#ifndef _WIN32
+    int opt;
+	while((opt = getopt(argc, argv, "m:d:w:s:")) != -1){
+		switch(opt){
+            case 'd':
+                data_path = optarg;
+                break;
+            case 's':
+                int small = atoi(optarg);
+                s = small > 0;
+                break;
+		}
+	} 
+#endif
 
 	// Initialize face alignment manager
 	faceAlignmentManager = std::unique_ptr<FaceAlignmentManager>(new FaceAlignmentManager(viewer));
+
+	// Initialize PCA manager
+	pcaManager = std::unique_ptr<PCAManager>(new PCAManager(viewer, s, data_path));
 
 	// Initialize learning manager
 	learningManager = std::unique_ptr<LearningManager>(new LearningManager(viewer));
@@ -205,6 +249,15 @@ int main(int argc,char *argv[]) {
 		}
 		else if (pipelineMode == FACE_ALIGNMENT_MODE) {
 			faceAlignmentManager->callback_draw_viewer_menu();
+		}
+		else if (pipelineMode == PCA_MODE) {
+			pcaManager->callback_draw_viewer_menu();
+			if(pcaManager->draw){
+				V = pcaManager->V;
+				F = pcaManager->F;
+				reload();
+				pcaManager->draw = false;
+			}
 		}
 		else if (pipelineMode == LEARNING_MODE) {
 			// Drawing custom learning window menu

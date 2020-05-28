@@ -14,7 +14,7 @@ PCA::PCA(int m_, string data_path_, string write_path_, bool small)
 
     igl::read_triangle_mesh(template_path, V_template, F_template);
     load_faces();
-    
+    cout << "Found " << nFiles << " faces.\n";
     Eigen::MatrixXd V_temp;
     Eigen::MatrixXi F_temp;
     Eigen::VectorXd happy, neutral;

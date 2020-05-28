@@ -47,11 +47,6 @@ class PCA{
         double variance = 0.1;
 
         void compute_pca();
-
-        /**
-         * @brief Load all meshes from data_path in the Face matrix where each row represents a face
-         * 
-         **/
         void load_faces();
         void get_template(Eigen::MatrixXd &V, Eigen::MatrixXi &F);
         void load_template();
