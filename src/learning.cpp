@@ -70,8 +70,8 @@ void LearningManager::callback_draw_viewer_menu() {
 
     if (ImGui::CollapsingHeader("Latent Weights", ImGuiTreeNodeFlags_DefaultOpen)) {
         
-        static float sliderMin = -2.5f;
-        static float sliderMax = 2.5f;
+        static float sliderMin = -8.f;
+        static float sliderMax = 8.f;
 
         float sliderMinMax[] = {sliderMin, sliderMax};
         if (ImGui::InputFloat2("Min/Max##Learning", sliderMinMax, "%.1f")) {
