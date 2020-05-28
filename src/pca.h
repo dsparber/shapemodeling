@@ -27,8 +27,8 @@ class PCA{
 
         Eigen::MatrixXd S; // covariance matrix
         Eigen::MatrixXd Faces;
-        Eigen::MatrixXd V; //
-        Eigen::MatrixXi F;
+        Eigen::MatrixXd V; // V and F we want to show
+        Eigen::MatrixXi F; //
         Eigen::MatrixXd V_template;
         Eigen::MatrixXi F_template;
         Eigen::MatrixXd eigenvectors;
@@ -60,7 +60,8 @@ class PCA{
         void change_expression(double p, Eigen::VectorXd &base);
         void random_face();
         void compute_weights(Eigen::VectorXd &face, Eigen::VectorXd &weights);
-
+        void reconstruct(Eigen::VectorXd &face);
+        void read_face(const string filename, Eigen::VectorXd &face);
     private:
         const string s_template_path = "../data/face_template/template_small.obj";
         const string l_template_path = "../data/face_template/template.obj";

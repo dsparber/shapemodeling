@@ -25,7 +25,6 @@ PCA::PCA(int m_, string data_path_, string write_path_, bool small)
     Vt = V_temp.transpose();
     neutral = Eigen::Map<Eigen::VectorXd>(Vt.data(), Vt.size());
     expression = happy - neutral;
-    cout << expression.segment(0,20).transpose()<< endl;
 }
 
 void PCA::load_template(){
@@ -106,7 +105,6 @@ void PCA::morphface(Eigen::VectorXd &f1, Eigen::VectorXd &f2, Eigen::VectorXd &w
     Eigen::VectorXd face;
     Eigen::VectorXd weights;
     weights = w1 - p*(w1 - w2);
-    cout <<" for morph face "<<  weights.transpose() << endl;
     eigenface(weights, mF);
 }
 
@@ -119,11 +117,20 @@ void PCA::change_expression(double p, Eigen::VectorXd &base){
 void PCA::compute_weights(Eigen::VectorXd &face, Eigen::VectorXd &weights){
     weights.setZero(m);
     Eigen::VectorXd diff = face - mF;
-    weights = eigenvectors.transpose() * diff; // weights too large
-    cout << weights.segment(0,10).transpose() << endl;
+    weights = eigenvectors.transpose() * diff;
+}
+
+void PCA::reconstruct(Eigen::VectorXd &face){
+    Eigen::VectorXd weights;
+    compute_weights(face, weights);
     eigenface(weights, mF);
 }
 
-// void PCA::reconstruct(Eigen::VectorXd &face){
-
-// }
+void PCA::read_face(const string filename, Eigen::VectorXd &face){
+    Eigen::MatrixXd V_t;
+    Eigen::MatrixXi F_t;
+    igl::read_triangle_mesh(filename, V_t, F_t);
+    V_t.transposeInPlace();
+    face = Eigen::Map<Eigen::VectorXd>(V_t.data(), V_t.size());
+    cout << face.segment(0, 10).transpose() << endl;
+}

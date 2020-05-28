@@ -79,7 +79,7 @@ bool draw_viewer_menu(){
 
     if(ImGui::Button("Write to File")){
         string full_write_path = write_path + write_file;
-        cout << "Written tocd " << full_write_path << endl;
+        cout << "Written to " << full_write_path << endl;
         igl::writeOBJ(full_write_path, pca->V, pca->F);
     }
 
@@ -113,7 +113,7 @@ bool draw_viewer_menu(){
         }
         if (ImGui::Button("Reconstruct Base", ImVec2((w-p), 0)))
         {
-            pca->compute_weights(base, base_weights);
+            pca->reconstruct(base);
             reload();
         }
 
@@ -126,24 +126,19 @@ bool draw_viewer_menu(){
             float p = ImGui::GetStyle().FramePadding.x;
             if (ImGui::Button("Face 1", ImVec2((w-p)/2.0f, 0)))
             {
-                std::string fname = igl::file_dialog_open();
-                igl::read_triangle_mesh(fname, pca->V, pca->F);
-                Eigen::MatrixXd Vt = pca->V.transpose();
-                v1 = Eigen::Map<Eigen::VectorXd>(Vt.data(), Vt.size());
-                weights1 = ((v1 - pca->mF).transpose() * pca->eigenvectors).transpose();
-                cout << "Diff to mean " << (v1-pca->mF).transpose().segment(0,10) << endl;
-                cout << "weights " << weights1.segment(0, 10).transpose() << endl;
-                reload();
+                // std::string fname = igl::file_dialog_open();
+                std::string fname = "../data/aligned_faces_example/default/livio-neutral.objaligned.obj";
+                pca->read_face(fname, v1);
+                cout << v1.size() << endl;
+                pca->compute_weights(v1, weights1);
+                cout << " computed weights" << endl;
             }
 
             if (ImGui::Button("Face 2", ImVec2((w-p)/2.0f, 0)))
             {
-                std::string fname = igl::file_dialog_open();
-                igl::read_triangle_mesh(fname, V, F);
-                Eigen::MatrixXd Vt = V.transpose();
-                v2 = Eigen::Map<Eigen::VectorXd>(Vt.data(), Vt.size());
-                weights2 = ((v2 - pca->mF).transpose() * pca->eigenvectors).transpose();
-                cout << weights2.transpose() << endl;
+                std::string fname = "../data/aligned_faces_example/default/jan-neutral.objaligned.obj";
+                pca->read_face(fname, v2);
+                pca->compute_weights(v2, weights2);
             }
 
             if(ImGui::SliderScalar("face 1", ImGuiDataType_Double, &morphSlider, &zero, &maxS)){
