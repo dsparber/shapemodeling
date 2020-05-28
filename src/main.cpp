@@ -46,9 +46,6 @@ enum PipelineMode {
 
 enum PipelineMode pipelineMode = LANDMARK_MODE;
 
-bool exampleBool = false;
-int exampleInt = 2;
-
 
 // ************************Function Declaration ************************ //
 bool callback_mouse_move(Viewer &viewer, int mouse_x, int mouse_y);
@@ -225,10 +222,7 @@ int main(int argc,char *argv[]) {
                 // Updating pipeline mode
                 pipelineMode = static_cast<enum PipelineMode>(index);
             }
-
-			//ImGui::Checkbox("Example Boolean", &exampleBool);
-			//ImGui::InputInt("Example Integer", &exampleInt);
-			
+						
 		}
 
 		if (pipelineMode == LANDMARK_MODE) {

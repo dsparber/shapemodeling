@@ -62,7 +62,7 @@ int LandmarkManager::pick_landmark_vertex(int mouse_x, int mouse_y) const {
 void LandmarkManager::callback_draw_viewer_menu() {
 
     ImGui::SetNextWindowPos(ImVec2(180.0f * 1.0f, 0.0f), ImGuiSetCond_FirstUseEver);
-    ImGui::SetNextWindowSize(ImVec2(200.0f, 500.0f), ImGuiSetCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(200.0f, 600.0f), ImGuiSetCond_FirstUseEver);
     ImGui::Begin("Landmark Window", nullptr);
 
     if (ImGui::CollapsingHeader("Load/Save", ImGuiTreeNodeFlags_DefaultOpen)) {

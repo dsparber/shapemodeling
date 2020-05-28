@@ -8,63 +8,95 @@
 
 #include <igl/file_dialog_open.h>
 
-FaceAlignmentManager::FaceAlignmentManager() {/* empty? */}
+FaceAlignmentManager::FaceAlignmentManager() {
 
-FaceAlignmentManager::~FaceAlignmentManager() {/* empty? */}
+}
+
+FaceAlignmentManager::~FaceAlignmentManager() {
+
+}
 
 void FaceAlignmentManager::callback_draw_viewer_menu() {
     ImGui::SetNextWindowPos(ImVec2(180.0f * 1.0f, 0.0f), ImGuiSetCond_FirstUseEver);
-    ImGui::SetNextWindowSize(ImVec2(300.0f, 600.0f), ImGuiSetCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(200.0f, 600.0f), ImGuiSetCond_FirstUseEver);
     ImGui::Begin("Face Alignment", nullptr);
 
     if (ImGui::CollapsingHeader("Rigid Registration", ImGuiTreeNodeFlags_DefaultOpen)) {
 
-        ImGui::InputText("Template mesh", path_template);
-        ImGui::InputText("Template landmarks", path_landmarks_template);
+        ImGui::PushItemWidth(-90.0f);
+        ImGui::InputText("Temp. mesh##FaceAlignment", path_template);
+        ImGui::PopItemWidth();
 
-        if (ImGui::Button("Browse scan mesh")) {
+        ImGui::PushItemWidth(-90.0f);
+        ImGui::InputText("Temp. landmarks##FaceAlignment", path_landmarks_template);
+        ImGui::PopItemWidth();
+
+        if (ImGui::Button("Browse scan mesh##FaceAlignment", ImVec2(-1.0f, 20.0f))) {
             path_scan = igl::file_dialog_open();
 
-            if (path_scan.length() > 0)
+            if (path_scan.length() > 0) {
                 std::cout << "Successfully set the scan mesh path to: " << path_scan << std::endl;
-            else
+            } else {
                 std::cout << "The provided path was empty, please repeat." << std::endl;
+            }
         }
 
-        if (ImGui::Button("Browse scan landmarks")) {
+        if (ImGui::Button("Browse scan landmarks##FaceAlignment", ImVec2(-1.0f, 20.0f))) {
             path_landmarks_scan = igl::file_dialog_open();
 
-            if (path_landmarks_scan.length() > 0)
+            if (path_landmarks_scan.length() > 0) {
                 std::cout << "Successfully set scan landmarks path to: " << path_landmarks_scan << std::endl;
-            else
+            } else {
                 std::cout << "The provided path was empty, please repeat." << std::endl;
+            }
         }
 
-        if (ImGui::Button("Rigidly align")) {
-            if (path_scan.length() > 0 && path_landmarks_scan.length() > 0)
+        if (ImGui::Button("Rigidly align##FaceAlignment", ImVec2(-1.0f, 20.0f))) {
+            if (path_scan.length() > 0 && path_landmarks_scan.length() > 0) {
                 rigidly_align();
-            else
+            } else {
                 std::cout << "Rigid alignment failed: One of the provided paths was empty." << std::endl;
+            }
         }
     }
 
     if (ImGui::CollapsingHeader("Warping", ImGuiTreeNodeFlags_DefaultOpen)) {
-        ImGui::InputDouble("Lambda", &lambda);
-        ImGui::InputInt("Iterations", &iterations);
-        ImGui::InputDouble("Rel. dist. threshold", &relative_distance_threshold);
-        ImGui::Checkbox("Use landmark constraints", &use_landmark_constraints);
+        
+        ImGui::PushItemWidth(-90.0f);
+        ImGui::InputDouble("Lambda##FaceAlignment", &lambda, 0.0, 0.0, "%.4lf");
+        ImGui::PopItemWidth();
 
-        if (ImGui::Button("Warp")) {
+        ImGui::PushItemWidth(-90.0f);
+        if (ImGui::InputInt("Iterations##FaceAlignment", &iterations)) {
+            iterations = std::max(0, iterations);
+        }
+        ImGui::PopItemWidth();
+
+        ImGui::PushItemWidth(-90.0f);
+        ImGui::InputDouble("Dist. threshold##FaceAlignment", &relative_distance_threshold, 0.0, 0.0, "%.4lf");
+        ImGui::PopItemWidth();
+
+        ImGui::Checkbox("Use landmark constraints##FaceAlignment", &use_landmark_constraints);
+
+        if (ImGui::Button("Warp##FaceAlignment", ImVec2(-1.0f, 20.0f))) {
             warp();
         }
 
-        ImGui::InputText("Result path", result_path);
-        if (ImGui::Button("Store warped mesh")) {
-            if (warping == nullptr)
+        ImGui::PushItemWidth(-40);
+        ImGui::PushID("Result Path##FaceAlignment");
+        ImGui::InputText("", result_path);
+        ImGui::PopID();
+        ImGui::PopItemWidth();
+
+        ImGui::SameLine();
+        if (ImGui::Button("Save##FaceAlignment", ImVec2(-1.0f, 20.0f))) {
+            if (warping == nullptr) {
                 std::cout << "Cannot store mesh before rigidly aligning and warping." << std::endl;
-            else
+            } else {
                 warping->store_last_result_to_obj_file(std::string(result_path));
+            }
         }
+
     }
 
     ImGui::End();
