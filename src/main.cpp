@@ -9,6 +9,13 @@
 #include <memory>
 #include <math.h> 
 
+#ifdef _WIN32
+	#include "dirent.h"
+#else
+	#include <dirent.h>
+	#include <unistd.h>
+#endif
+
 #include "common.h"
 #include "landmark.h"
 #include "face_alignment.h"

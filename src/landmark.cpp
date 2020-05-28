@@ -75,7 +75,7 @@ void LandmarkManager::callback_draw_viewer_menu() {
         ImGui::PopItemWidth();
 
         ImGui::SameLine();
-        if (ImGui::Button("Load##Landmark", ImVec2(-1.0f, 20.0f))) {
+        if (ImGui::Button("Load##Landmark", ImVec2(-1.0f, 0.0f))) {
             // Reading landmark values from input file path
             read_from_file(inputFile);
             std::cout << "Loaded landmarks from " << inputFile << std::endl;
@@ -88,7 +88,7 @@ void LandmarkManager::callback_draw_viewer_menu() {
         ImGui::PopItemWidth();
 
         ImGui::SameLine();
-        if (ImGui::Button("Save##Landmark", ImVec2(-1.0f, 20.0f))) {
+        if (ImGui::Button("Save##Landmark", ImVec2(-1.0f, 0.0f))) {
             // Writing landmark values to output file
             write_to_file(outputFile);
             std::cout << "Saved landmarks to " << outputFile << std::endl;

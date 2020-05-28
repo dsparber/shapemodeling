@@ -7,6 +7,10 @@
 #include "../src/pca_manager.h"
 #include "../src/common.h"
 
+#ifndef _WIN32
+    #include <unistd.h>
+#endif
+
 using namespace std;
 using namespace Eigen;
 using Viewer = igl::opengl::glfw::Viewer;

@@ -37,7 +37,7 @@ void LearningManager::callback_draw_viewer_menu() {
 
         bool dirty = false;
 
-        if (ImGui::Button("Load Faces##Learning", ImVec2(-1.0f, 20.0f))) {
+        if (ImGui::Button("Load Faces##Learning", ImVec2(-1.0f, 0.0f))) {
             
             // Updating system commands
             updateCommands();
@@ -100,7 +100,7 @@ void LearningManager::callback_draw_viewer_menu() {
             ImGui::PopID();
         }
 
-        if (ImGui::Button("Randomize##Learning", ImVec2(87.5f, 20.0f))) {
+        if (ImGui::Button("Randomize##Learning", ImVec2(87.5f, 0.0f))) {
             
             // Setting standard deviation as 0.25 of min/max interval
             float standardDeviation = 0.25f * (sliderMax - sliderMin);
@@ -117,14 +117,14 @@ void LearningManager::callback_draw_viewer_menu() {
 
         ImGui::SameLine();
 
-        if (ImGui::Button("Reset##Learning", ImVec2(87.5f, 20.0f))) {
+        if (ImGui::Button("Reset##Learning", ImVec2(87.5f, 0.0f))) {
             // Resetting slider weights
             for (int i = 0; i < sliderWeights.size(); ++i){
                 sliderWeights[i] = 0.0f;
             }
         }
 
-        if (ImGui::Button("Apply##Learning", ImVec2(182.5f, 20.0f))) {
+        if (ImGui::Button("Apply##Learning", ImVec2(182.5f, 0.0f))) {
             
             // Updating system commands
             updateCommands();
