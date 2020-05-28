@@ -102,12 +102,16 @@ bool callback_key_pressed(Viewer &viewer, unsigned char key, int modifier) {
 	
 	switch (key) {
 		case '1':
+			pipelineMode = LANDMARK_MODE;
 			break;
 		case '2':
+			pipelineMode = FACE_ALIGNMENT_MODE;
 			break;
 		case '3':
+			pipelineMode = PCA_MODE;
 			break;
 		case '4':
+			pipelineMode = LEARNING_MODE;
 			break;
 	}
 

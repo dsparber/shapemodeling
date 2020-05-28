@@ -60,7 +60,7 @@ void PCAManager::callback_draw_viewer_menu()
     {
         for(int i = 0; i < m; i++){
             string slider_name = "EV " + to_string(i + 1);
-            if(ImGui::SliderScalar(slider_name.c_str(), ImGuiDataType_Double, &(slider[m-(i+1)]), &mone, &one)){
+            if(ImGui::SliderScalar(slider_name.c_str(), ImGuiDataType_Double, &(slider[m-(i+1)]), &mone, &one, "%.3lf")){
                 this->draw = true;
             }
         }
@@ -68,11 +68,11 @@ void PCAManager::callback_draw_viewer_menu()
             eigenface(weight_factor * slider.array() * eigenvalues.array(), base);
         }
         
-        if(ImGui::InputDouble("Scale##PCA", &weight_factor)){
+        if(ImGui::InputDouble("Scale##PCA", &weight_factor, 0.0, 0.0, "%.3lf")){
             weight_factor = std::abs(weight_factor);
         }
 
-        ImGui::SliderScalar("Std. Dev.##PCA", ImGuiDataType_Double, &random_variance, &zero, &max_random_variance);
+        ImGui::SliderScalar("Std. Dev.##PCA", ImGuiDataType_Double, &random_variance, &zero, &max_random_variance, "%.3lf");
 
         float w = ImGui::GetContentRegionAvailWidth();
         float p = ImGui::GetStyle().FramePadding.x;
@@ -146,7 +146,7 @@ void PCAManager::callback_draw_viewer_menu()
             }
         }
 
-        if(ImGui::SliderScalar("Morph##PCA", ImGuiDataType_Double, &p12, &zero, &one)){
+        if(ImGui::SliderScalar("Morph##PCA", ImGuiDataType_Double, &p12, &zero, &one, "%.3lf")){
             morphface();
             this->draw = true;
         }
@@ -155,7 +155,7 @@ void PCAManager::callback_draw_viewer_menu()
     
     if (ImGui::CollapsingHeader("Expression Changer", ImGuiTreeNodeFlags_DefaultOpen))
     {
-        if (ImGui::SliderScalar("Expression##PCA", ImGuiDataType_Double, &p_exp, &mone, &one)){
+        if(ImGui::SliderScalar("Expression##PCA", ImGuiDataType_Double, &p_exp, &mone, &one, "%.3lf")){
             change_expression(p_exp, base);
             this->draw = true;
         }

@@ -69,7 +69,7 @@ void FaceAlignmentManager::callback_draw_viewer_menu() {
     if (ImGui::CollapsingHeader("Warping", ImGuiTreeNodeFlags_DefaultOpen)) {
         
         ImGui::PushItemWidth(labelWidth);
-        if (ImGui::InputDouble("Lambda##FaceAlignment", &lambda, 0.0, 0.0, "%.4lf")) {
+        if (ImGui::InputDouble("Lambda##FaceAlignment", &lambda, 0.0, 0.0, "%.3lf")) {
             // Setting lambda to be positive
             lambda = std::abs(lambda);
         }
@@ -83,7 +83,7 @@ void FaceAlignmentManager::callback_draw_viewer_menu() {
         ImGui::PopItemWidth();
 
         ImGui::PushItemWidth(labelWidth);
-        if (ImGui::InputDouble("Dist. threshold##FaceAlignment", &relative_distance_threshold, 0.0, 0.0, "%.4lf")) {
+        if (ImGui::InputDouble("Dist. threshold##FaceAlignment", &relative_distance_threshold, 0.0, 0.0, "%.3lf")) {
             // Setting relative distance to be positive
             relative_distance_threshold = std::abs(relative_distance_threshold);
         }
@@ -95,6 +95,7 @@ void FaceAlignmentManager::callback_draw_viewer_menu() {
             warp();
         }
 
+/*
         float w = ImGui::GetContentRegionAvailWidth();
         float p = ImGui::GetStyle().FramePadding.x;
 
@@ -112,6 +113,7 @@ void FaceAlignmentManager::callback_draw_viewer_menu() {
                 warping->store_last_result_to_obj_file(std::string(result_path));
             }
         }
+*/
 
     }
 
@@ -120,19 +122,19 @@ void FaceAlignmentManager::callback_draw_viewer_menu() {
 
 bool FaceAlignmentManager::callback_key_pressed(Viewer& viewer, unsigned char key, int modifier) {
     switch (key) {
-    case '1':
+    case '8':
         // Show scanned face (rigidly aligned)
         if (V_scan.size() > 0 && F_scan.size() > 0) {
             mesh_to_show = 1;
         }
         break;
-    case '2':
+    case '9':
         // Show template (rigidly aligned)
         if (V_template.size() > 0 && V_template.size() > 0) {
             mesh_to_show = 2;
         }
         break;
-    case '3':
+    case '0':
         // Show warped mesh
         if (V_warped.size() > 0 && F_warped.size() > 0) {
             mesh_to_show = 3;
@@ -157,7 +159,7 @@ void FaceAlignmentManager::rigidly_align() {
     );
     warping = std::unique_ptr<Warping>(new Warping(V_template, V_scan, F_template, F_scan, landmarks));
     mesh_to_show = 1;
-    std::cout << "Rigidly aligned, press '1' for the scanned face and '2' for the template." << std::endl;
+    std::cout << "Rigidly aligned, press '8' for the scanned face and '9' for the template." << std::endl;
 }
 
 void FaceAlignmentManager::warp() {
@@ -169,6 +171,6 @@ void FaceAlignmentManager::warp() {
         return;
     }
     warping->warp(lambda, iterations, relative_distance_threshold, use_landmark_constraints, V_warped, F_warped);
-    std::cout << "Press '3' for the warped face." << std::endl;
+    std::cout << "Press '0' for the warped face." << std::endl;
     mesh_to_show = 3;
 }
