@@ -127,7 +127,7 @@ void LandmarkManager::callback_draw_viewer_menu() {
             
             ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
             
-            ImGui::BeginChild(std::to_string(i).c_str(), ImVec2(0.0f, 58.0f), true, ImGuiWindowFlags_NoScrollWithMouse/* | ImGuiWindowFlags_MenuBar*/);
+            ImGui::BeginChild(std::to_string(i).c_str(), ImVec2(0.0f, 1.5f*58.0f), true, ImGuiWindowFlags_NoScrollWithMouse/* | ImGuiWindowFlags_MenuBar*/);
             ImGui::Columns(3, NULL, false);
             {
                 {

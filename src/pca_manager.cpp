@@ -16,10 +16,10 @@ PCAManager::PCAManager(const Viewer& viewer_, bool small_, string data_path, int
     }else{
         template_path = l_template_path;
         n = 22779;
-        f1_path = "../data/aligned_faces_example/large/person1.obj";
-        f2_path = "../data/aligned_faces_example/large/person2.obj";
-        happy_path = "../data/aligned_faces_example/large/happy.obj";
-        neutral_path = "../data/aligned_faces_example/large/neutral.obj";
+        f1_path = "../data/pca/large/person1.obj";
+        f2_path = "../data/pca/large/person2.obj";
+        happy_path = "../data/pca/large/happy.obj";
+        neutral_path = "../data/pca/small/neutral.obj";
     }
 
     igl::read_triangle_mesh(template_path, this->V, this->F);
@@ -254,39 +254,4 @@ void PCAManager::read_face(const string filename, Eigen::VectorXd &face){
     igl::read_triangle_mesh(filename, V_t, F_t);
     V_t.transposeInPlace();
     face = Eigen::Map<Eigen::VectorXd>(V_t.data(), V_t.size());
-}
-
-void PCAManager::recompute_pca(){
-    if(small){
-        template_path = s_template_path;
-        n = 2319;
-    }else{
-        template_path = l_template_path;
-        n = 22779;
-        f1_path = "../data/aligned_faces_example/large/person1.obj";
-        f2_path = "../data/aligned_faces_example/large/person2.obj";
-        happy_path = "../data/aligned_faces_example/large/happy.obj";
-        neutral_path = "../data/aligned_faces_example/large/neutral.obj";
-    }
-
-    igl::read_triangle_mesh(template_path, this->V, this->F);
-    load_faces();
-    cout << "Found " << nFiles << " faces.\n";
-
-    // expression 
-    Eigen::VectorXd happy, neutral;
-    read_face(happy_path, happy);
-    read_face(neutral_path, neutral);
-    expression = happy - neutral;
-
-    // general
-    slider = Eigen::VectorXd::Zero(m);
-    compute_pca();
-    base = mF;
-
-    // morphing
-    read_face(f1_path, f1);
-    read_face(f2_path, f2);
-    compute_weights(f1, w1);
-    compute_weights(f2, w2);
 }

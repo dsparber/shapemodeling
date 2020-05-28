@@ -1,0 +1,4 @@
+threshold = 0.017
+lambda = 0.3
+iterations = 5
+use landmark constraints = 0

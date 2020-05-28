@@ -20,9 +20,9 @@ void FaceAlignmentManager::callback_draw_viewer_menu() {
     ImGui::SetNextWindowPos(ImVec2(180.0f * 1.0f, 0.0f), ImGuiSetCond_FirstUseEver);
     ImGui::SetNextWindowSize(ImVec2(200.0f, 600.0f), ImGuiSetCond_FirstUseEver);
     ImGui::Begin("Face Alignment", nullptr);
-
+    float buttonHeight = 30.0f;
     if (ImGui::CollapsingHeader("Rigid Registration", ImGuiTreeNodeFlags_DefaultOpen)) {
-
+        
         ImGui::PushItemWidth(-90.0f);
         ImGui::InputText("Temp. mesh##FaceAlignment", path_template);
         ImGui::PopItemWidth();
@@ -31,7 +31,7 @@ void FaceAlignmentManager::callback_draw_viewer_menu() {
         ImGui::InputText("Temp. landmarks##FaceAlignment", path_landmarks_template);
         ImGui::PopItemWidth();
 
-        if (ImGui::Button("Browse scan mesh##FaceAlignment", ImVec2(-1.0f, 20.0f))) {
+        if (ImGui::Button("Browse scan mesh##FaceAlignment", ImVec2(-1.0f, buttonHeight))) {
             path_scan = igl::file_dialog_open();
 
             if (path_scan.length() > 0) {
@@ -41,7 +41,7 @@ void FaceAlignmentManager::callback_draw_viewer_menu() {
             }
         }
 
-        if (ImGui::Button("Browse scan landmarks##FaceAlignment", ImVec2(-1.0f, 20.0f))) {
+        if (ImGui::Button("Browse scan landmarks##FaceAlignment", ImVec2(-1.0f, buttonHeight))) {
             path_landmarks_scan = igl::file_dialog_open();
 
             if (path_landmarks_scan.length() > 0) {
@@ -51,7 +51,7 @@ void FaceAlignmentManager::callback_draw_viewer_menu() {
             }
         }
 
-        if (ImGui::Button("Rigidly align##FaceAlignment", ImVec2(-1.0f, 20.0f))) {
+        if (ImGui::Button("Rigidly align##FaceAlignment", ImVec2(-1.0f, buttonHeight))) {
             if (path_scan.length() > 0 && path_landmarks_scan.length() > 0) {
                 rigidly_align();
             } else {
@@ -85,7 +85,7 @@ void FaceAlignmentManager::callback_draw_viewer_menu() {
 
         ImGui::Checkbox("Use landmark constraints##FaceAlignment", &use_landmark_constraints);
 
-        if (ImGui::Button("Warp##FaceAlignment", ImVec2(-1.0f, 20.0f))) {
+        if (ImGui::Button("Warp##FaceAlignment", ImVec2(-1.0f, buttonHeight))) {
             warp();
         }
 
@@ -96,7 +96,7 @@ void FaceAlignmentManager::callback_draw_viewer_menu() {
         ImGui::PopItemWidth();
 
         ImGui::SameLine();
-        if (ImGui::Button("Save##FaceAlignment", ImVec2(-1.0f, 20.0f))) {
+        if (ImGui::Button("Save##FaceAlignment", ImVec2(-1.0f, buttonHeight))) {
             if (warping == nullptr) {
                 std::cout << "Cannot store mesh before rigidly aligning and warping." << std::endl;
             } else {

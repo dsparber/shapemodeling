@@ -42,6 +42,7 @@ We experimented with different constraints, such as template boundary, scan land
 
 ## PCA
 
+Once we have the aligned faces, we can represent each face as a 3nx1 vector, where n is the number of points for each face.
 
 
 ## Learning

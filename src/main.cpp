@@ -24,7 +24,7 @@ Viewer viewer;
 
 // inputs for PCA
 int m = 10;
-string data_path = "../data/aligned_faces_example/default";
+string data_path = "../data/pca/small/default";
 bool s = true;
 
 // vertex array, #V x3

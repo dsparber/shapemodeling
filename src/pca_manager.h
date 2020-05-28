@@ -63,6 +63,7 @@ private:
     // random face generator
     double random_variance = 7.0;
     double max_random_variance = 20.0;
+    std::mt19937 eng;
 
     // eigenfaces
     Eigen::VectorXd slider;
@@ -73,8 +74,8 @@ private:
     Eigen::VectorXd f1, f2;
     Eigen::VectorXd w1, w2;
     double p12 = 0.0;
-    string f1_path = "../data/aligned_faces_example/default/simon-neutral.objaligned.obj";
-    string f2_path = "../data/aligned_faces_example/default/virginia-neutral.objaligned.obj";
+    string f1_path = "../data/pca/small/person1.obj";
+    string f2_path = "../data/pca/small/person2.obj";
 
     // expression
     double p_exp = 0.0;
@@ -90,21 +91,18 @@ private:
     void compute_weights(Eigen::VectorXd &face, Eigen::VectorXd &weights);
     void reconstruct(Eigen::VectorXd &face);
     void read_face(const string filename, Eigen::VectorXd &face);
-    void recompute_pca();
 
     // Path variables
 
-    string data_path = "../data/aligned_faces_example/default"; 
+    string data_path = "../data/pca/small/default"; 
     string data_path_selection = data_path;
     string write_path = "../";
     string write_file = "default.obj";
     string template_path;
     const string s_template_path = "../data/face_template/template_small.obj";
     const string l_template_path = "../data/face_template/template.obj";
-    string neutral_path = "../data/aligned_faces_example/default/jan-neutral.objaligned.obj";
-    string happy_path = "../data/aligned_faces_example/default/jan-smile.objaligned.obj";
-
-    std::mt19937 eng;
+    string neutral_path = "../data/pca/small/neutral.obj";
+    string happy_path = "../data/pca/small/happy.obj";
 
 };
 

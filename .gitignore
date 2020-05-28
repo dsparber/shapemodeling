@@ -36,7 +36,6 @@ cmake-build-*/
 *.pyc
 .vscode/
 .idea/
-data/
 
 warped_meshes
 checkpoints
