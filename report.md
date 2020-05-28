@@ -11,7 +11,7 @@
 3) The template and scan are translated so that their mean landmark is in (0,0,0).
 4) The scan is rotated on the template with the best rotation that aligns their landmarks. We chose to rotate the scan on the template and not viceversa in order to then have warped templates having all the same orientation in space, which is required for PCA.
 
-![Alignment](https://github.com/DanielSparber/sm-assignment6/blob/master/screenshots/alignment.png)
+![Alignment](screenshots/alignment.png)
 
 ## Warping
 
@@ -28,9 +28,9 @@ where:
 
 We experimented with different constraints, such as template boundary, scan landmarks and scan points far less than a user defined threshold from the scan. In the end, we only kept the template boundary and points far less than some threshold as constraints.
 
-![warping](https://github.com/DanielSparber/sm-assignment6/blob/master/screenshots/warp1.png)
+![warping](screenshots/warp1.png)
 
-![warping](https://github.com/DanielSparber/sm-assignment6/blob/master/screenshots/warp2.png)
+![warping](screenshots/warp2.png)
 
 ## PCA
 
