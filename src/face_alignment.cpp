@@ -8,7 +8,7 @@
 
 #include <igl/file_dialog_open.h>
 
-FaceAlignmentManager::FaceAlignmentManager(Viewer& viewer) : viewer(viewer) {/* empty? */}
+FaceAlignmentManager::FaceAlignmentManager() {/* empty? */}
 
 FaceAlignmentManager::~FaceAlignmentManager() {/* empty? */}
 
@@ -74,15 +74,21 @@ bool FaceAlignmentManager::callback_key_pressed(Viewer& viewer, unsigned char ke
     switch (key) {
     case '1':
         // Show scanned face (rigidly aligned)
-        show_mesh(1);
+        if (V_scan.size() > 0 && F_scan.size() > 0) {
+            mesh_to_show = 1;
+        }
         break;
     case '2':
         // Show template (rigidly aligned)
-        show_mesh(2);
+        if (V_template.size() > 0 && V_template.size() > 0) {
+            mesh_to_show = 2;
+        }
         break;
     case '3':
         // Show warped mesh
-        show_mesh(3);
+        if (V_warped.size() > 0 && F_warped.size() > 0) {
+            mesh_to_show = 3;
+        }
         break;
     }
     return true;
@@ -102,7 +108,7 @@ void FaceAlignmentManager::rigidly_align() {
         landmarks
     );
     warping = std::unique_ptr<Warping>(new Warping(V_template, V_scan, F_template, F_scan, landmarks));
-    show_mesh(1);
+    mesh_to_show = 1;
     std::cout << "Rigidly aligned, press '1' for the scanned face and '2' for the template." << std::endl;
 }
 
@@ -116,32 +122,5 @@ void FaceAlignmentManager::warp() {
     }
     warping->warp(lambda, iterations, relative_distance_threshold, use_landmark_constraints, V_warped, F_warped);
     std::cout << "Press '3' for the warped face." << std::endl;
-    show_mesh(3);
-}
-
-void FaceAlignmentManager::show_mesh(const int mesh_type) {
-    viewer.data().clear();
-    if (V_scan.size() > 0) {
-        viewer.core.align_camera_center(V_scan);
-    }
-    switch (mesh_type) {
-    case 1:
-        // Show scanned face (rigidly aligned)
-        if (V_scan.size() > 0 && F_scan.size() > 0) {
-            viewer.data().set_mesh(V_scan, F_scan);
-        }
-        break;
-    case 2:
-        // Show template (rigidly aligned)
-        if (V_template.size() > 0 && V_template.size() > 0) {
-            viewer.data().set_mesh(V_template, F_template);
-        }
-        break;
-    case 3:
-        // Show warped mesh
-        if (V_warped.size() > 0 && F_warped.size() > 0) {
-            viewer.data().set_mesh(V_warped, F_warped);
-        }
-        break;
-    }
+    mesh_to_show = 3;
 }

@@ -100,6 +100,23 @@ bool callback_key_pressed(Viewer &viewer, unsigned char key, int modifier) {
 	else if (pipelineMode == FACE_ALIGNMENT_MODE) {
 		// Passing on key pressed event to face alignment manager
 		faceAlignmentManager->callback_key_pressed(viewer, key, modifier);
+		// Checking if face alignment manager tells main to update mesh
+		if (faceAlignmentManager->mesh_to_show > 0) {
+			// Loading new mesh
+			switch (faceAlignmentManager->mesh_to_show) {
+			case 1:
+				load_mesh(faceAlignmentManager->V_scan, faceAlignmentManager->F_scan); // rigidly aligned scan mesh
+				break;
+			case 2:
+				load_mesh(faceAlignmentManager->V_template, faceAlignmentManager->F_template); // rigidly aligned template mesh
+				break;
+			case 3:
+				load_mesh(faceAlignmentManager->V_warped, faceAlignmentManager->F_warped); // warped mesh
+				break;
+			}
+			// Resetting mesh update parameter of face alignment manager 
+			faceAlignmentManager->mesh_to_show = 0;
+		}
 	}
 	else if (pipelineMode == LEARNING_MODE) {
 		// Passing on key pressed event to learning manager
@@ -184,7 +201,7 @@ int main(int argc,char *argv[]) {
 	}
 
 	// Initialize face alignment manager
-	faceAlignmentManager = std::unique_ptr<FaceAlignmentManager>(new FaceAlignmentManager(viewer));
+	faceAlignmentManager = std::unique_ptr<FaceAlignmentManager>(new FaceAlignmentManager());
 
 	// Initialize learning manager
 	learningManager = std::unique_ptr<LearningManager>(new LearningManager(viewer));
@@ -220,6 +237,23 @@ int main(int argc,char *argv[]) {
 		}
 		else if (pipelineMode == FACE_ALIGNMENT_MODE) {
 			faceAlignmentManager->callback_draw_viewer_menu();
+			// Checking if face alignment manager tells main to update mesh
+			if (faceAlignmentManager->mesh_to_show > 0) {
+				// Loading new mesh
+				switch (faceAlignmentManager->mesh_to_show) {
+				case 1:
+					load_mesh(faceAlignmentManager->V_scan, faceAlignmentManager->F_scan); // rigidly aligned scan mesh
+					break;
+				case 2:
+					load_mesh(faceAlignmentManager->V_template, faceAlignmentManager->F_template); // rigidly aligned template mesh
+					break;
+				case 3:
+					load_mesh(faceAlignmentManager->V_warped, faceAlignmentManager->F_warped); // warped mesh
+					break;
+				}
+				// Resetting mesh update parameter of face alignment manager 
+				faceAlignmentManager->mesh_to_show = 0;
+			}
 		}
 		else if (pipelineMode == LEARNING_MODE) {
 			// Drawing custom learning window menu
