@@ -5,6 +5,8 @@
 
 - [Our Presentation](https://docs.google.com/presentation/d/1DIcviOEhOQk6m5dT0ryPQ2L86IimTuuQazykyQr2f8I/edit?usp=sharing)
 
+- [Our report](report.md)
+
 - [Our meshes (polybox)](https://polybox.ethz.ch/index.php/s/TjBI4GNID1qZCtm?path=%2F)
 
 - [Files, shared with all teams (polybox)](https://polybox.ethz.ch/index.php/s/ZfYXXfV5SR4sQoB)  (PW: eigenfaces)
