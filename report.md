@@ -1,5 +1,9 @@
 # Report - Game of Faces
 
+## Our own scans
+
+![wall](screenshots/got.png)
+
 ## Preprocessing
 
 All the mesh boundaries have been smoothed using the bi-laplacian approach as in assignment 5.
