@@ -21,7 +21,7 @@ using Viewer = igl::opengl::glfw::Viewer;
 class PCAManager {
 public:
 
-    PCAManager(const Viewer& viewer_, bool small_, string data_path);
+    PCAManager(const Viewer& viewer_, bool small_, string data_path, int m);
     ~PCAManager();
 
     void callback_draw_viewer_menu();
@@ -104,7 +104,6 @@ private:
     string neutral_path = "../data/aligned_faces_example/default/jan-neutral.objaligned.obj";
     string happy_path = "../data/aligned_faces_example/default/jan-smile.objaligned.obj";
 
-    // std::mt19937 eng{std::chrono::high_resolution_clock::now().time_since_epoch().count()};
     std::mt19937 eng;
 
 };

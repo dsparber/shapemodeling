@@ -13,7 +13,7 @@ using Viewer = igl::opengl::glfw::Viewer;
 class FaceAlignmentManager {
 public:
 
-    FaceAlignmentManager(Viewer& viewer);
+    FaceAlignmentManager();
 
     ~FaceAlignmentManager();
 
@@ -28,16 +28,15 @@ public:
     std::string path_landmarks_scan = "../data/landmarks_example/person0__23landmarks";
 
     // parameters warping
-    double lambda = 1;
-    int iterations = 1;
-    double relative_distance_threshold = 0.01;
+    double lambda = 0.3;
+    int iterations = 5;
+    double relative_distance_threshold = 0.017;
     bool use_landmark_constraints = false;
     std::string result_path = "../data/landmarks_example/person0_alignment_result.obj";
 
-private:
-    Viewer& viewer;
-
-    std::unique_ptr<Warping> warping;
+    // parameters for updating mesh from main
+    // 0 for no update, 1 for scan, 2 for template, 3 for warped mesh
+    int mesh_to_show = 0;
 
     // rigidly aligned meshes
     Eigen::MatrixXd V_template;
@@ -49,9 +48,11 @@ private:
     Eigen::MatrixXd V_warped;
     Eigen::MatrixXi F_warped;
 
+private:
+    std::unique_ptr<Warping> warping;
+
     void rigidly_align();
     void warp();
-    void show_mesh(const int mesh_type);
 };
 
 #endif

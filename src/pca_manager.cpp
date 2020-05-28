@@ -7,10 +7,9 @@
 #include <igl/opengl/glfw/imgui/ImGuiHelpers.h>
 #include <imgui/imgui.h>
 
-PCAManager::PCAManager(const Viewer& viewer_, bool small_, string data_path) 
-    :viewer(viewer_), small(small_), data_path(data_path)
+PCAManager::PCAManager(const Viewer& viewer_, bool small_, string data_path, int m_) 
+    :viewer(viewer_), small(small_), data_path(data_path), m(m_)
 {
-
     if(small){
         template_path = s_template_path;
         n = 2319;
