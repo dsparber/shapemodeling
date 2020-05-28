@@ -41,3 +41,4 @@ data/
 warped_meshes
 checkpoints
 latents.txt
+learning_out.obj
