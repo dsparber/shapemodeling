@@ -1,24 +1,11 @@
 import torch
-import glob
-import os
 import argparse
-from data.face_dataset import FaceDataset
-from model import PointNetAutoencoder
-from torch.nn import MSELoss
-from torch.nn.functional import pad
-from data.obj_utils import write_obj, load_obj
+from config import get_model, get_faces
+from data.obj_utils import write_obj
 
-high_res = False
-n = 22779 if high_res else 2319
-saved_model = 'model_high_res.pt' if high_res else 'model.pt'
-model = PointNetAutoencoder(n)
-model.load_state_dict(torch.load(saved_model))
+model = get_model()
+f = get_faces()
 
-data_path = '../data/warped_meshes_high_res/' if high_res else '../data/warped_meshes/'
-template = glob.glob(os.path.join(data_path, "*.obj"))[0]
-_, f = load_obj(template)
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model = model.to(device)
 
 def export(x):
     write_obj('learning_out.obj', x, f)
@@ -36,8 +23,7 @@ def decode(z):
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Process some integers.')
-    parser.add_argument('z', metavar='N', type=float, nargs='+')
+    parser.add_argument('latents', metavar='N', type=float, nargs='+')
     args = parser.parse_args()
-    z = args.z
-    decode(z)
+    decode(args.latents)
 
