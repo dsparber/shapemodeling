@@ -209,6 +209,7 @@ bool reload(){
 
 int main(int argc,char *argv[]){
     int opt;
+#ifndef _WIN32
 	while((opt = getopt(argc, argv, "m:d:w:s:")) != -1){
 		switch(opt){
 			case 'm':
@@ -225,7 +226,9 @@ int main(int argc,char *argv[]){
                 s = small > 0;
                 break;
 		}
-	} 
+	}
+#endif
+
     slider = Eigen::VectorXd::Zero(m);
     pca = std::shared_ptr<PCA>(new PCA(m, data_path, write_path, s));
     pca->load_template();
