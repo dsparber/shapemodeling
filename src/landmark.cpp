@@ -1,5 +1,7 @@
 #include "landmark.h"
 
+#include "common.h"
+
 #include <igl/opengl/glfw/imgui/ImGuiMenu.h>
 #include <igl/opengl/glfw/imgui/ImGuiHelpers.h>
 #include <imgui/imgui.h>
@@ -61,7 +63,7 @@ int LandmarkManager::pick_landmark_vertex(int mouse_x, int mouse_y) const {
 
 void LandmarkManager::callback_draw_viewer_menu() {
 
-    ImGui::SetNextWindowPos(ImVec2(180.0f * 1.0f, 0.0f), ImGuiSetCond_FirstUseEver);
+    ImGui::SetNextWindowPos(ImVec2(180.0f * SCREEN_SCALE, 0.0f), ImGuiSetCond_FirstUseEver);
     ImGui::SetNextWindowSize(ImVec2(200.0f, 600.0f), ImGuiSetCond_FirstUseEver);
     ImGui::Begin("Landmark Window", nullptr);
 
@@ -127,7 +129,7 @@ void LandmarkManager::callback_draw_viewer_menu() {
             
             ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
             
-            ImGui::BeginChild(std::to_string(i).c_str(), ImVec2(0.0f, 1.5f*58.0f), true, ImGuiWindowFlags_NoScrollWithMouse/* | ImGuiWindowFlags_MenuBar*/);
+            ImGui::BeginChild(std::to_string(i).c_str(), ImVec2(0.0f, 58.0f * SCREEN_SCALE), true, ImGuiWindowFlags_NoScrollWithMouse/* | ImGuiWindowFlags_MenuBar*/);
             ImGui::Columns(3, NULL, false);
             {
                 {

@@ -1,6 +1,7 @@
 #include "face_alignment.h"
 
 #include "rigid_registration.h"
+#include "common.h"
 
 #include <imgui/imgui.h>
 #include <igl/opengl/glfw/imgui/ImGuiMenu.h>
@@ -20,7 +21,7 @@ FaceAlignmentManager::~FaceAlignmentManager() {
 
 void FaceAlignmentManager::callback_draw_viewer_menu() {
     
-    ImGui::SetNextWindowPos(ImVec2(180.0f * 1.0f, 0.0f), ImGuiSetCond_FirstUseEver);
+    ImGui::SetNextWindowPos(ImVec2(180.0f * SCREEN_SCALE, 0.0f), ImGuiSetCond_FirstUseEver);
     ImGui::SetNextWindowSize(ImVec2(200.0f, 600.0f), ImGuiSetCond_FirstUseEver);
     ImGui::Begin("Face Alignment", nullptr);
     

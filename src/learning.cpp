@@ -1,5 +1,7 @@
 #include "learning.h"
 
+#include "common.h"
+
 #include <igl/opengl/glfw/imgui/ImGuiMenu.h>
 #include <igl/opengl/glfw/imgui/ImGuiHelpers.h>
 #include <imgui/imgui.h>
@@ -26,7 +28,7 @@ LearningManager::~LearningManager() {
 
 void LearningManager::callback_draw_viewer_menu() {
 
-    ImGui::SetNextWindowPos(ImVec2(180.0f * 1.0f, 0.0f), ImGuiSetCond_FirstUseEver);
+    ImGui::SetNextWindowPos(ImVec2(180.0f * SCREEN_SCALE, 0.0f), ImGuiSetCond_FirstUseEver);
     ImGui::SetNextWindowSize(ImVec2(200.0f, 600.0f), ImGuiSetCond_FirstUseEver);
     ImGui::Begin("Learning Window", nullptr);
 
@@ -100,7 +102,10 @@ void LearningManager::callback_draw_viewer_menu() {
             ImGui::PopID();
         }
 
-        if (ImGui::Button("Randomize##Learning", ImVec2(87.5f, 0.0f))) {
+        float w = ImGui::GetContentRegionAvailWidth();
+        float p = ImGui::GetStyle().FramePadding.x;
+
+        if (ImGui::Button("Randomize##Learning", ImVec2(0.5f * (w-p), 0.0f))) {
             
             // Setting standard deviation as 0.25 of min/max interval
             float standardDeviation = 0.25f * (sliderMax - sliderMin);
@@ -115,16 +120,16 @@ void LearningManager::callback_draw_viewer_menu() {
 
         }
 
-        ImGui::SameLine();
+        ImGui::SameLine(0.0f, p);
 
-        if (ImGui::Button("Reset##Learning", ImVec2(87.5f, 0.0f))) {
+        if (ImGui::Button("Reset##Learning", ImVec2(0.5f * (w-p), 0.0f))) {
             // Resetting slider weights
             for (int i = 0; i < sliderWeights.size(); ++i){
                 sliderWeights[i] = 0.0f;
             }
         }
 
-        if (ImGui::Button("Apply##Learning", ImVec2(182.5f, 0.0f))) {
+        if (ImGui::Button("Apply##Learning", ImVec2(-1.0f, 0.0f))) {
             
             // Updating system commands
             updateCommands();

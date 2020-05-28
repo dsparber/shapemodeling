@@ -1,5 +1,7 @@
 #include "pca_manager.h"
+
 #include "common.h"
+
 #include <igl/writeOBJ.h>
 #include <igl/read_triangle_mesh.h>
 
@@ -50,8 +52,8 @@ PCAManager::~PCAManager(){/* empty? */}
 void PCAManager::callback_draw_viewer_menu()
 {
 
-    ImGui::SetNextWindowPos(ImVec2(180.0f * 1.0f, 0.0f), ImGuiSetCond_FirstUseEver);
     ImGui::SetNextWindowSize(ImVec2(300.0f, 600.0f), ImGuiSetCond_FirstUseEver);
+    ImGui::SetNextWindowPos(ImVec2(180.0f * SCREEN_SCALE, 0.0f), ImGuiSetCond_FirstUseEver);
     ImGui::Begin("PCA", nullptr);
 
     if(ImGui::CollapsingHeader("Write to File", ImGuiTreeNodeFlags_DefaultOpen)){
@@ -68,7 +70,7 @@ void PCAManager::callback_draw_viewer_menu()
     if (ImGui::CollapsingHeader("Eigenfaces", ImGuiTreeNodeFlags_DefaultOpen))
     {
         for(int i = 0; i < m; i++){
-            string slider_name = "Eigenvector " + to_string(i);
+            string slider_name = "Eigenvector " + to_string(i + 1);
             if(ImGui::SliderScalar(slider_name.c_str(), ImGuiDataType_Double, &(slider[m-(i+1)]), &mone, &one)){
                 this->draw = true;
             }

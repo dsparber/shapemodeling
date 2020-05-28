@@ -16,6 +16,7 @@
 #include <dirent.h>
 #endif
 
+#define SCREEN_SCALE 1.5f
 
 using namespace std;
 
