@@ -17,19 +17,27 @@ using Viewer = igl::opengl::glfw::Viewer;
 int m = 10;
 bool s = true;
 
+Eigen::VectorXd v1, v2;
+Eigen::VectorXd weights1, weights2;
+Eigen::MatrixXi F;
+Eigen::MatrixXd V;
 string data_path = "../data/aligned_faces_example/default";
 string write_path = "./";
 string write_file = "default.obj";
 string inputFile = "../data/face_template/template_small.obj";
-vector<double> slider;
+Eigen::VectorXd slider;
+double morphSlider = 0;
+double exSlider = 0;
 double minS = -1.0;
 double maxS = 1.0;
 double zero = 0.0;
+double variance = 1000;
+Eigen::VectorXd base_weights;
 Eigen::VectorXd base;
 
 Viewer viewer;
 std::shared_ptr<PCA> pca;
-
+double maxVar = 10;
 /////////////////////////////GUI////////////////////////////////////////
 bool callback_key_down(Viewer &viewer, unsigned char key, int modifiers);
 bool callback_mouse_down(Viewer &viewer, int button, int modifier);
@@ -54,22 +62,24 @@ bool draw_viewer_menu(){
             }
         }
         if(change){
-            pca->morph_face(slider, base);
+            pca->eigenface(variance * slider.array() * pca->eigenvalues.array(), base);
             reload();
         }
+
+        if(ImGui::InputDouble("variance for ef", &variance));
     }
 
-    ImGui::SliderScalar("var", ImGuiDataType_Double, &(pca->variance), &zero, &maxS);
+    ImGui::SliderScalar("var", ImGuiDataType_Double, &(pca->variance), &zero, &maxVar);
 
     if(ImGui::Button("Reset weights")){
-        slider = vector<double>(m, 0.0);
-		pca->morph_face(slider, base);
+        slider = Eigen::VectorXd::Zero(m);
+		pca->eigenface(slider, base);
 		reload();		
     }
 
     if(ImGui::Button("Write to File")){
         string full_write_path = write_path + write_file;
-        cout << "Written tocd " << full_write_path << endl;
+        cout << "Written to " << full_write_path << endl;
         igl::writeOBJ(full_write_path, pca->V, pca->F);
     }
 
@@ -87,18 +97,68 @@ bool draw_viewer_menu(){
     ImGui::PopID();
     ImGui::PopItemWidth();
 
+    // load base
     if (ImGui::CollapsingHeader("Load Base", ImGuiTreeNodeFlags_DefaultOpen))
     {
         float w = ImGui::GetContentRegionAvailWidth();
         float p = ImGui::GetStyle().FramePadding.x;
         if (ImGui::Button("Load##Mesh", ImVec2((w-p), 0)))
         {
+
             std::string fname = igl::file_dialog_open();
             igl::read_triangle_mesh(fname, pca->V, pca->F);
-            base = Eigen::Map<Eigen::VectorXd>(pca->V.transpose().data(), pca->V.size()) - pca->mF;
+            Eigen::MatrixXd Vt = pca->V.transpose();
+            base = Eigen::Map<Eigen::VectorXd>(Vt.data(), Vt.size());
             reload();
         }
+        if (ImGui::Button("Reconstruct Base", ImVec2((w-p), 0)))
+        {
+            pca->reconstruct(base);
+            reload();
+        }
+
+    } 
+
+    // choose 2 faces from 
+    if (ImGui::CollapsingHeader("Morph Face", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+            float w = ImGui::GetContentRegionAvailWidth();
+            float p = ImGui::GetStyle().FramePadding.x;
+            if (ImGui::Button("Face 1", ImVec2((w-p)/2.0f, 0)))
+            {
+                // std::string fname = igl::file_dialog_open();
+                std::string fname = "../data/aligned_faces_example/default/livio-neutral.objaligned.obj";
+                pca->read_face(fname, v1);
+                cout << v1.size() << endl;
+                pca->compute_weights(v1, weights1);
+                cout << " computed weights" << endl;
+            }
+
+            if (ImGui::Button("Face 2", ImVec2((w-p)/2.0f, 0)))
+            {
+                std::string fname = "../data/aligned_faces_example/default/jan-neutral.objaligned.obj";
+                pca->read_face(fname, v2);
+                pca->compute_weights(v2, weights2);
+            }
+
+            if(ImGui::SliderScalar("face 1", ImGuiDataType_Double, &morphSlider, &zero, &maxS)){
+                pca->morphface(v1, v2, weights1, weights2, morphSlider);
+                reload();
+            }
     }
+
+    if (ImGui::CollapsingHeader("Expression Changer", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        float w = ImGui::GetContentRegionAvailWidth();
+        float p = ImGui::GetStyle().FramePadding.x;
+
+        if (ImGui::SliderScalar("Expression", ImGuiDataType_Double, &exSlider, &minS, &maxS))
+        {
+            pca->change_expression(exSlider, base);
+            reload();
+        }
+
+    } 
 
 }
 bool callback_key_down(Viewer &viewer, unsigned char key, int modifiers){
@@ -115,7 +175,7 @@ bool callback_mouse_move(Viewer &viewer, int mouse_x, int mouse_y){
 }
 
 bool callback_mouse_up(Viewer &viewer, int button, int modifier){
-    pca->morph_face(slider, base);
+    pca->eigenface(slider, base);
     reload();
     return true;
 }
@@ -123,7 +183,7 @@ bool callback_mouse_up(Viewer &viewer, int button, int modifier){
 bool callback_key_pressed(Viewer &viewer, unsigned char key, int modifiers){
 	switch (key) {
 	case '1':
-        pca->morph_face(slider, base);
+        pca->eigenface(slider, base);
         reload();
 		break;
     case '2':
@@ -166,7 +226,7 @@ int main(int argc,char *argv[]){
                 break;
 		}
 	} 
-    slider = vector<double>(m, 0.0);
+    slider = Eigen::VectorXd::Zero(m);
     pca = std::shared_ptr<PCA>(new PCA(m, data_path, write_path, s));
     pca->load_template();
     reload();

@@ -29,6 +29,12 @@
 - Sebastian: Landmark Selection, User Interface
 - Viviane: PCA
 
+### Collaborations
+
+- The manual work of selecting landmarks was distributed among the groups
+- Smooth the mesh boundaries
+- Keep 21 landmarks (no cheeks, to avoid ambiguity)
+
 ### Group Meetings
 
 - 09.05.2020, 14:00
@@ -39,11 +45,11 @@
 
 ### Project Structure
 
-`src/main.cpp` is the entry point for an application containing all pipline steps
+- `src/main.cpp` is the entry point for an application containing all pipline steps
 
-`test/` contains main files for every pipline step individually
+- `test/` contains main files for every pipline step individually
 
-`learning/` contains the learning based approach (PyTorch)
+- `learning/` contains the learning based approach (PyTorch)
 
 
 ### How To
@@ -63,6 +69,7 @@ make -j2
 ```
 
 #### Add a new step to the pipeline
+
 1. Add header and source file in `src`
 2. Write your own test file in `test`
 3. Add an executable for your step in CMakeLists.txt

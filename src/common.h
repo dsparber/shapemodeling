@@ -46,4 +46,5 @@ void reshape(Eigen::VectorXd flat, int rows, int cols, Eigen::MatrixXd &matrix);
 
 void compute_pca(string dirPath, int m, Eigen::VectorXd& F_m, Eigen::MatrixXd& W, Eigen::VectorXd& eigenvalues);
 void load_faces(string dir, Eigen::MatrixXd &X);
+void read_face_vector(string filename, Eigen::VectorXd &v);
 #endif // COMMON_H_

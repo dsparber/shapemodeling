@@ -27,15 +27,15 @@ class PCA{
 
         Eigen::MatrixXd S; // covariance matrix
         Eigen::MatrixXd Faces;
-        Eigen::MatrixXd V; //
-        Eigen::MatrixXi F;
+        Eigen::MatrixXd V; // V and F we want to show
+        Eigen::MatrixXi F; //
         Eigen::MatrixXd V_template;
         Eigen::MatrixXi F_template;
         Eigen::MatrixXd eigenvectors;
         Eigen::VectorXd eigenvalues;
         Eigen::VectorXd mF; // mean face
         Eigen::MatrixXd M; 
-
+        Eigen::VectorXd expression;
         string data_path; 
         string write_path;
         string template_path;
@@ -55,14 +55,20 @@ class PCA{
         void load_faces();
         void get_template(Eigen::MatrixXd &V, Eigen::MatrixXi &F);
         void load_template();
-        void morph_face(const vector<double> &slider, Eigen::VectorXd &base);
+        void eigenface(const Eigen::VectorXd &slider, Eigen::VectorXd &base);
+        void morphface(Eigen::VectorXd &f1, Eigen::VectorXd &f2, Eigen::VectorXd &w1, Eigen::VectorXd &w2, double p);
+        void change_expression(double p, Eigen::VectorXd &base);
         void random_face();
-
+        void compute_weights(Eigen::VectorXd &face, Eigen::VectorXd &weights);
+        void reconstruct(Eigen::VectorXd &face);
+        void read_face(const string filename, Eigen::VectorXd &face);
     private:
         const string s_template_path = "../data/face_template/template_small.obj";
         const string l_template_path = "../data/face_template/template.obj";
         vector<string> listOfFiles;
         std::mt19937 eng{std::chrono::high_resolution_clock::now().time_since_epoch().count()};
+        const string neutral_path = "../data/aligned_faces_example/default/jan-neutral.objaligned.obj";
+        const string happy_path = "../data/aligned_faces_example/default/jan-smile.objaligned.obj";
 };
 
 

@@ -1,1 +1,1 @@
-from .point_net_autoencoder import PointNetAutoencoder
+from .autoencoder import Autoencoder
