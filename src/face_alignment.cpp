@@ -63,17 +63,24 @@ void FaceAlignmentManager::callback_draw_viewer_menu() {
     if (ImGui::CollapsingHeader("Warping", ImGuiTreeNodeFlags_DefaultOpen)) {
         
         ImGui::PushItemWidth(-90.0f);
-        ImGui::InputDouble("Lambda##FaceAlignment", &lambda, 0.0, 0.0, "%.4lf");
+        if (ImGui::InputDouble("Lambda##FaceAlignment", &lambda, 0.0, 0.0, "%.4lf")) {
+            // Setting lambda to be positive
+            lambda = std::abs(lambda);
+        }
         ImGui::PopItemWidth();
 
         ImGui::PushItemWidth(-90.0f);
         if (ImGui::InputInt("Iterations##FaceAlignment", &iterations)) {
+            // Setting iterations to zero if user input is negative
             iterations = std::max(0, iterations);
         }
         ImGui::PopItemWidth();
 
         ImGui::PushItemWidth(-90.0f);
-        ImGui::InputDouble("Dist. threshold##FaceAlignment", &relative_distance_threshold, 0.0, 0.0, "%.4lf");
+        if (ImGui::InputDouble("Dist. threshold##FaceAlignment", &relative_distance_threshold, 0.0, 0.0, "%.4lf")) {
+            // Setting relative distance to be positive
+            relative_distance_threshold = std::abs(relative_distance_threshold);
+        }
         ImGui::PopItemWidth();
 
         ImGui::Checkbox("Use landmark constraints##FaceAlignment", &use_landmark_constraints);
