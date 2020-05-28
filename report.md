@@ -16,7 +16,7 @@
 
 1) We use an iterative method to warp the template to the scan.
 2) We update the template vertices through an energy minimization procedure. We use the following energy:
-<img src="https://latex.codecogs.com/gif.latex?P(s | O_t )=\text { Probability of a sensor reading value when sleep onset is observed at a time bin } t " />
+<img src="https://latex.codecogs.com/svg.latex?E_{warp} = ||Lx' - Lx||^2 + \lambda||\operatorname{Id}_{constr} x' - c||^2" />
 
 where:
 * x : current template vertices.
@@ -28,4 +28,41 @@ We experimented with different constraints, such as template boundary, scan land
 
 ## PCA
 
+
+
 ## Learning
+
+### General
+- Implemented with PyTorch
+- Generating test data: warping script and PCA based generator 
+- Tried COMA and PointNet
+- Implemented our own approach, inspired by PointNet
+- Integrated into pipeline to visualize
+  - Interactive sliders to tweak latents and morph faces
+
+### Our Model
+
+#### Architecture
+
+1. `point_net_encoder`: Feature transform from `nx3` to `n` using the PointNet Architecture
+2. `fully_connected_encoder` Fully connected network to reduce dimension to `10`, using ReLU and Dropout
+3. `decoder` Fully connected decoder using ReLU and BatchNorm normalization
+
+#### Dataflow
+- Encode: `input` -> `point_net_encoder` -> `fully_connected_encoder` -> `latents`
+- Decode: `latents` -> `decoder` -> `output` 
+
+#### Details
+For more details see [autoencoder.py](./learning/model/autoencoder.py) in this git repository
+
+### Comparison to PCA
+
+- Learning is slower
+- But, faces look more realistic
+  - Non linear transformation
+- Learning approach works for all kinds of Point Clouds
+  - Only testing data was specific for faces
+
+### Screenshots
+
+TODO

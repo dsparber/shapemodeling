@@ -1,6 +1,6 @@
 import torch
 from data.face_dataset import FaceDataset
-from model import PointNetAutoencoder
+from model import Autoencoder
 from torch.nn import MSELoss
 from torch.nn.functional import pad
 
@@ -19,7 +19,7 @@ if __name__ == "__main__":
 
     num_points = dataset.num_points()
     
-    model = PointNetAutoencoder(num_points)
+    model = Autoencoder(num_points)
     if pretrained_model is not None:
         model.load_state_dict(torch.load(pretrained_model))
     model = model.to(device)
