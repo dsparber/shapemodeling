@@ -23,17 +23,18 @@
 
 ### Work distribution
 
-- Camilla: Preprocessing, Rigid Alignment
+- Camilla: Preprocessing, Face Alignment (Rigid)
 - Daniel: Project Lead, Learning Based Approach (bonus)
-- Jela: Warping
-- Sebastian: Landmark Selection, User Interface
+- Jela: Face Alignment (Warping)
+- Sebastian: Landmark Selection, Own Scans, User Interface
 - Viviane: PCA
 
 ### Collaborations
 
 - The manual work of selecting landmarks was distributed among the groups
 - Smooth the mesh boundaries
-- Keep 21 landmarks (no cheeks, to avoid ambiguity)
+- Keep 22 landmarks (no cheeks, to avoid ambiguity)
+- Shared own scans and landmarks with other teams
 
 ### Group Meetings
 
