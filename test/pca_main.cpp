@@ -31,12 +31,13 @@ double exSlider = 0;
 double minS = -1.0;
 double maxS = 1.0;
 double zero = 0.0;
-
+double variance = 1000;
+Eigen::VectorXd base_weights;
 Eigen::VectorXd base;
 
 Viewer viewer;
 std::shared_ptr<PCA> pca;
-
+double maxVar = 10;
 /////////////////////////////GUI////////////////////////////////////////
 bool callback_key_down(Viewer &viewer, unsigned char key, int modifiers);
 bool callback_mouse_down(Viewer &viewer, int button, int modifier);
@@ -61,12 +62,14 @@ bool draw_viewer_menu(){
             }
         }
         if(change){
-            pca->eigenface(slider, base);
+            pca->eigenface(variance * slider.array() * pca->eigenvalues.array(), base);
             reload();
         }
+
+        if(ImGui::InputDouble("variance for ef", &variance));
     }
 
-    ImGui::SliderScalar("var", ImGuiDataType_Double, &(pca->variance), &zero, &maxS);
+    ImGui::SliderScalar("var", ImGuiDataType_Double, &(pca->variance), &zero, &maxVar);
 
     if(ImGui::Button("Reset weights")){
         slider = Eigen::VectorXd::Zero(m);
@@ -110,7 +113,7 @@ bool draw_viewer_menu(){
         }
         if (ImGui::Button("Reconstruct Base", ImVec2((w-p), 0)))
         {
-            
+            pca->compute_weights(base, base_weights);
             reload();
         }
 

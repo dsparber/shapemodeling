@@ -84,3 +84,11 @@ void compute_pca(string dirPath, int m, Eigen::VectorXd& mX, Eigen::MatrixXd& E,
     E = u.block(0, n - m, d, m); //dxm matrix of eigenvectors (in cols)
     eigenvalues = eigen.eigenvalues().segment(n - m, m);
 }   
+
+void read_face_vector(string filename, Eigen::VectorXd &v){
+    Eigen::MatrixXd V;
+    Eigen::MatrixXi F;
+    igl::read_triangle_mesh(filename, V, F);
+    V.transposeInPlace();
+    v = Eigen::Map<Eigen::VectorXd>(V.data(), V.size());
+}

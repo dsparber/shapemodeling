@@ -72,6 +72,7 @@ void PCA::compute_pca()
     auto v = eigen.eigenvectors();
     Eigen::MatrixXd u = Faces.adjoint() * v; 
     eigenvectors = u.block(0, nFiles - m, 3*n, m); //dxm matrix of eigenvectors (in cols)
+    eigenvectors.colwise().normalize(); // normalize
     eigenvalues = eigen.eigenvalues().segment(nFiles - m, m).colwise().normalized();
 }   
 
@@ -114,3 +115,15 @@ void PCA::change_expression(double p, Eigen::VectorXd &base){
     face = base + p * expression;
     reshape(face.transpose(), face.size()/3, 3, V);
 }
+
+void PCA::compute_weights(Eigen::VectorXd &face, Eigen::VectorXd &weights){
+    weights.setZero(m);
+    Eigen::VectorXd diff = face - mF;
+    weights = eigenvectors.transpose() * diff; // weights too large
+    cout << weights.segment(0,10).transpose() << endl;
+    eigenface(weights, mF);
+}
+
+// void PCA::reconstruct(Eigen::VectorXd &face){
+
+// }

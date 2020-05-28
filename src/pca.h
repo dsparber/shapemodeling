@@ -59,7 +59,7 @@ class PCA{
         void morphface(Eigen::VectorXd &f1, Eigen::VectorXd &f2, Eigen::VectorXd &w1, Eigen::VectorXd &w2, double p);
         void change_expression(double p, Eigen::VectorXd &base);
         void random_face();
-        
+        void compute_weights(Eigen::VectorXd &face, Eigen::VectorXd &weights);
 
     private:
         const string s_template_path = "../data/face_template/template_small.obj";
