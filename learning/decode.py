@@ -8,11 +8,11 @@ from torch.nn import MSELoss
 from torch.nn.functional import pad
 from data.obj_utils import write_obj, load_obj
 
-large = False
-n = 22779 if large else 2319
-saved_model = 'model_large.pt' if large else 'model.pt'
+high_res = False
+n = 22779 if high_res else 2319
+saved_model = 'model_high_res.pt' if high_res else 'model.pt'
 model = PointNetAutoencoder(n)
-model.load_state_dict(torch.load('model.pt'))
+model.load_state_dict(torch.load(saved_model))
 
 data_path = '../data/warped_meshes_high_res/'
 template = glob.glob(os.path.join(data_path, "*.obj"))[0]
