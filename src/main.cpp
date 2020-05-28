@@ -57,6 +57,7 @@ bool callback_key_pressed(Viewer &viewer, unsigned char key, int modifier);
 bool callback_pre_draw(Viewer &viewer);
 bool callback_init(Viewer &viewer);
 bool load_mesh(const std::string &filename);
+bool load_mesh(const Eigen::MatrixXd &V, const Eigen::MatrixXi &F);
 // ******************************************************************** //
 
 
@@ -146,6 +147,20 @@ bool load_mesh(const std::string &filename) {
 
 	// Reading triangle from file (multiple mesh types possible)
 	igl::read_triangle_mesh(filename, V, F);
+
+	// Clearing viewer data, setting mesh and aligning camera
+	viewer.data().clear();
+	viewer.data().set_mesh(V, F);
+	viewer.core.align_camera_center(V);
+
+	// Initializing landmark manager
+	landmarkManager = std::unique_ptr<LandmarkManager>(new LandmarkManager(V, F, viewer));
+
+	return true;
+
+}
+
+bool load_mesh(const Eigen::MatrixXd &V, const Eigen::MatrixXi &F) {
 
 	// Clearing viewer data, setting mesh and aligning camera
 	viewer.data().clear();

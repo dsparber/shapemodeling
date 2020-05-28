@@ -124,7 +124,7 @@ void LearningManager::callback_draw_viewer_menu() {
             }
         }
 
-        if (ImGui::Button("Apply##Learning", ImVec2(180.0f, 20.0f))) {
+        if (ImGui::Button("Apply##Learning", ImVec2(182.5f, 20.0f))) {
             
             // Updating system commands
             updateCommands();
