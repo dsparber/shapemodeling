@@ -2,6 +2,10 @@
 
 ## Preprocessing
 
+All the mesh boundaries have been smoothed using the bi-laplacian approach as in assignment 5.
+
+![Preprocessing](screenshots/smooth.png)
+
 ## Landmarks
 
 ## Rigid alignment
