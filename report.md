@@ -60,8 +60,54 @@ For a more detailed explanation on the energy minimization and constraints, see 
 
 ## PCA
 
-Once we have the aligned faces, we can represent each face as a 3nx1 vector, where n is the number of points for each face.
+Once we have the aligned faces, we can represent each face as a 3nx1 vector, where n is the number of points for each face. We are using the 2391 points to represent a face. If we have N faces in our dataset, we can compute the eigenvalue decomposition of the covariance matrix of the centered face matrix (use the smaller dimension min(3xn, N)). Using the m normalized eigenvector as basis vectors, and computing the weights as the projection of the face vector to each eigenvector, we are able to save the face vector as a mx1 weight vector instead of 3xn with some reconstruction error. This is a way of compression, since one only needs to store the eigenvectors to decode the image and send the m weight vectors. 
 
+### Face Reconstruction
+
+The dot product between face vectors and the normalized eigenvectors is the weight or coordinate in direction of this eigenvectors. By projecting the face vector to the eigenvectors corresponding to the m largest eigenvalues (PCA), we can reconstruct the image. 
+
+* reconstruction of a face with a 27 face dataset and using 10 principle components
+
+<p float="left">
+  <img src="screenshots/original.png" 0 height="400"/>
+  <img src="screenshots/reconstruction.png" 0 height="400"/>
+  <img src="screenshots/mean.png" 0 height="400"/>
+</p>
+
+
+### Face morphing
+
+One other application of PCA is face morphing, which enables a smooth transition from one projected face to the other, by linear interpolating between the two reconstructions of the meshes.
+
+* reconstruction of mesh 1, 50/50 fusion between mesh 1 and 2  and mesh 2
+
+<p float="left">
+  <img src="screenshots/morph1.png" 0 height="400"/>
+  <img src="screenshots/morph2.png" 0 height="400"/>
+  <img src="screenshots/morph3.png" 0 height="400"/>
+</p>
+
+### Expression Changer
+
+By adding a weighted difference vector from the same person with different expressions, one creates universal expression vectors which can be added to any face. 
+
+* sad neutral and happy face with an a expression difference vector from another person
+
+<p float="left">
+  <img src="screenshots/sad.png" 0 height="400"/>
+  <img src="screenshots/neutral.png" 0 height="400"/>
+  <img src="screenshots/happy.png" 0 height="400"/>
+</p>
+
+### Random Face Generator 
+
+We can draw normal distributed weights for each eigenvector to generate new faces. 
+
+<p float="left">
+  <img src="screenshots/random1.png" 0 height="400"/>
+  <img src="screenshots/random2.png" 0 height="400"/>
+  <img src="screenshots/random3.png" 0 height="400"/>
+</p>
 
 ## Learning
 
@@ -90,6 +136,25 @@ Once we have the aligned faces, we can represent each face as a 3nx1 vector, whe
 #### Details
 For more details see [autoencoder.py](./learning/model/autoencoder.py) in this git repository
 
+### Results
+
+<p float="left">
+  <img src="screenshots/learning1.png" 0 height="400"/>
+  <img src="screenshots/learning2.png" 0 height="400"/>
+</p>
+
+## GUI
+
+To show each step of our project pipeline as a streamline, we have created a GUI that walks through every step. We have added features such as loading and writing meshes, loading different data paths or landmarking with instructions and feedback. The learning step calls a python script which uses a pretrained model to compute the latent vectors.
+
+<img src="screenshots/GUI1.png" height="400"/>
+
+<img src="screenshots/GUI2.png" height="400"/>
+
+<img src="screenshots/GUI3.png" height="400"/>
+
+<img src="screenshots/GUI4.png" height="400"/>
+
 ### Comparison to PCA
 
 - Learning is slower
@@ -97,7 +162,3 @@ For more details see [autoencoder.py](./learning/model/autoencoder.py) in this g
   - Non linear transformation
 - Learning approach works for all kinds of Point Clouds
   - Only testing data was specific for faces
-
-### Screenshots
-
-TODO
