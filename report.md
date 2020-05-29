@@ -143,6 +143,14 @@ For more details see [autoencoder.py](./learning/model/autoencoder.py) in this g
   <img src="screenshots/learning2.png" 0 height="400"/>
 </p>
 
+### Comparison to PCA
+
+- Learning is slower
+- But, faces look more realistic
+  - Non linear transformation
+- Learning approach works for all kinds of Point Clouds
+  - Only training data was specific for faces
+
 ## GUI
 
 To show each step of our project pipeline as a streamline, we have created a GUI that walks through every step. We have added features such as loading and writing meshes, loading different data paths or landmarking with instructions and feedback. The learning step calls a python script which uses a pretrained model to compute the latent vectors.
@@ -155,10 +163,3 @@ To show each step of our project pipeline as a streamline, we have created a GUI
 
 <img src="screenshots/GUI4.png" height="400"/>
 
-### Comparison to PCA
-
-- Learning is slower
-- But, faces look more realistic
-  - Non linear transformation
-- Learning approach works for all kinds of Point Clouds
-  - Only training data was specific for faces
