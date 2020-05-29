@@ -46,7 +46,9 @@ where:
 * c : constraints.
 * <img src="https://latex.codecogs.com/svg.latex?\lambda" /> : hyperparameter that controls the relative weighting of smoothing term and constraints term.
 
-We experimented with different constraints, such as template boundary, scan landmarks and scan points far less than a user defined threshold from the scan. In the end, we only kept the template boundary and points far less than some threshold as constraints.
+We experimented with different constraints, such as template boundary, landmarks and points whose distance to the target mesh is smaller than a user defined threshold. In the end, we only kept the template boundary and close enough points as constraints.
+
+For a more detailed explanation on the energy minimization and constraints, see the [Warping Theory file](Warping_Theory.pdf)
 
 * template and target scan.
 
