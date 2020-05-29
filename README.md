@@ -44,6 +44,10 @@
 - 28.05.2020, 10:00
 - 28.05.2020, 17:30
 
+### Note about User Interface
+
+In case the User Interface by ImGui look off and/or are partially scaled incorrectly, please change the two variables `SCREEN_SCALE_X` and `SCREEN_SCALE_Y` in the file `common.h`.
+
 ### Project Structure
 
 - `src/main.cpp` is the entry point for an application containing all pipline steps
