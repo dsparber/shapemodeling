@@ -113,7 +113,7 @@ We can draw normal distributed weights for each eigenvector to generate new face
 
 ### Overview
 - Implemented with PyTorch
-- Generating test data: warping script and PCA based generator 
+- Generating training data: warping script and PCA based generator 
 - Tried COMA and PointNet
 - Implemented our own approach, inspired by PointNet
 - Integrated into pipeline to visualize
@@ -161,4 +161,4 @@ To show each step of our project pipeline as a streamline, we have created a GUI
 - But, faces look more realistic
   - Non linear transformation
 - Learning approach works for all kinds of Point Clouds
-  - Only testing data was specific for faces
+  - Only training data was specific for faces
